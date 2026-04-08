@@ -39,8 +39,10 @@ foreach($cart as $id => $qty){
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkout - BuyBuy</title>
 <link rel="icon" type="image/png" href="../assets/uploads/logo.png">
 
@@ -51,176 +53,446 @@ foreach($cart as $id => $qty){
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Simonetta:ital,wght@0,400;0,900;1,400;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Poppins:wght@300;400;500;600;700;800&family=Simonetta:wght@400;900&display=swap" rel="stylesheet">
 
 <style>
-/* Background body */
-body{ 
-    background:#ffff; 
-    padding-bottom:260px; /* Ditambah karena ada form kurir */
+:root{
+    --primary:#FFA4A4;
+    --primary-dark:#ff8f8f;
+    --secondary:#fff7f7;
+    --text:#222;
+    --muted:#777;
+    --white:#fff;
+    --border:#f1d9d9;
+    --shadow:0 10px 30px rgba(0,0,0,0.06);
+    --radius:20px;
 }
 
-/* Navbar */
-.navbar{ background:#FFA4A4; }
-
-/* Logo */
-.navbar-brand {
-    font-weight: 700;
-    color: white !important;
-    font-size: 35px;
-    font-family: Simonetta;
+/* ===============================
+   GLOBAL
+================================ */
+body{
+    font-family:'Poppins', sans-serif;
+    background:linear-gradient(to bottom, #fff8f8, #ffffff);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:120px;
 }
 
-/* Icon navbar */
+a{
+    text-decoration:none;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+.navbar{
+    background:linear-gradient(90deg, #FFA4A4, #ffb7b7);
+    padding:18px 50px;
+    box-shadow:0 8px 20px rgba(255,164,164,0.18);
+}
+
+.navbar-brand{
+    font-weight:700;
+    color:white !important;
+    font-size:38px;
+    font-family:'Simonetta', serif;
+    letter-spacing:1px;
+}
+
 .nav-icon{
     color:white !important;
     font-size:22px;
-    margin-left:20px;
+    margin-left:22px;
+    width:45px;
+    height:45px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    transition:0.25s ease;
 }
 
-/* Wrapper tabs */
-.tabs-wrapper{
-    position:relative;
+.nav-icon:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,0.25);
+}
+
+/* ===============================
+   HEADER PAGE
+================================ */
+.page-header{
     margin-top:40px;
-    margin-bottom:40px;
+    margin-bottom:35px;
 }
 
-/* Tombol back */
-.back-btn{
-    position:absolute;
-    left:0;
-    top:0;
-    font-size:22px;
+.back-link{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+    background:var(--white);
+    color:var(--text);
+    box-shadow:var(--shadow);
+    transition:0.2s ease;
 }
 
-.back-btn a{
-    color:black;
-    text-decoration:none;
+.back-link:hover{
+    transform:translateY(-2px);
+    color:var(--primary-dark);
 }
 
-/* Tabs */
+.page-title{
+    font-size:30px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.page-subtitle{
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* ===============================
+   TABS
+================================ */
 .cart-tabs{
     display:flex;
+    gap:14px;
+    flex-wrap:wrap;
     justify-content:center;
-    gap:70px;
-    font-weight:500;
+    margin-top:25px;
 }
 
 .cart-tabs a{
-    text-decoration:none;
-    color:#444;
-    position:relative;
-    padding-bottom:5px;
+    background:var(--white);
+    color:#555;
+    padding:12px 24px;
+    border-radius:999px;
+    font-weight:500;
+    box-shadow:0 6px 18px rgba(0,0,0,0.05);
+    transition:0.25s ease;
 }
 
-/* Tab aktif */
+.cart-tabs a:hover{
+    transform:translateY(-2px);
+    color:var(--primary-dark);
+}
+
 .cart-tabs a.active{
-    color:black;
+    background:linear-gradient(90deg, #FFA4A4, #ffbebe);
+    color:white;
 }
 
-.cart-tabs a.active::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:0;
-    width:100%;
-    height:2px;
-    background:black;
+/* ===============================
+   MAIN LAYOUT
+================================ */
+.checkout-layout{
+    display:grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap:28px;
+    align-items:start;
 }
 
-/* Card checkout */
-.checkout-card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
+.left-panel,
+.right-panel{
+    background:rgba(255,255,255,0.92);
+    border:1px solid rgba(255,255,255,0.7);
+    backdrop-filter:blur(10px);
+    border-radius:28px;
+    padding:28px;
+    box-shadow:var(--shadow);
+}
+
+/* ===============================
+   SECTION TITLE
+================================ */
+.section-title{
+    font-size:20px;
+    font-weight:700;
     margin-bottom:20px;
     display:flex;
     align-items:center;
+    gap:10px;
+}
+
+.section-title i{
+    color:var(--primary-dark);
+}
+
+/* ===============================
+   CART ITEM
+================================ */
+.checkout-card{
+    background:linear-gradient(to right, #fff, #fff9f9);
+    border:1px solid #f8e2e2;
+    border-radius:22px;
+    padding:18px;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
     justify-content:space-between;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    transition:0.25s ease;
 }
 
-/* Gambar produk */
+.checkout-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.05);
+}
+
 .product-img{
-    width:100px;
-    height:100px;
+    width:95px;
+    height:95px;
     object-fit:cover;
-    border-radius:10px;
+    border-radius:18px;
+    border:2px solid #fff1f1;
 }
 
-/* Footer checkout (fixed bawah) */
-.checkout-bottom{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:#FFA4A4;
-    padding:25px 60px;
-    color:white;
-    z-index:1000;
+.product-name{
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:5px;
 }
 
-/* Tombol metode pembayaran */
+.product-qty{
+    font-size:14px;
+    color:var(--muted);
+}
+
+.product-price{
+    font-size:18px;
+    font-weight:700;
+    color:var(--primary-dark);
+}
+
+/* ===============================
+   EMPTY CART
+================================ */
+.empty-box{
+    background:#fff8e8;
+    border:1px solid #ffe6a8;
+    color:#8b6d12;
+    padding:20px;
+    border-radius:18px;
+    text-align:center;
+    font-weight:500;
+}
+
+/* ===============================
+   PAYMENT METHOD
+================================ */
+.payment-methods{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+}
+
 .method-btn{
     border:none;
-    padding:8px 25px;
-    border-radius:8px 8px 0 0;
-    background:#f7b6b6;
-    color:white;
-    font-weight:500;
+    padding:12px 22px;
+    border-radius:14px;
+    background:#ffe0e0;
+    color:#b65c5c;
+    font-weight:600;
+    transition:0.25s ease;
 }
 
-/* Metode aktif */
+.method-btn:hover{
+    transform:translateY(-2px);
+}
+
 .method-active{
-    background:white;
-    color:#FFA4A4;
-}
-
-/* Tombol order */
-.order-btn{
-    background:white;
-    color:#FFA4A4;
-    border:none;
-    padding:10px 60px;
-    border-radius:8px;
-    font-weight:500;
-}
-
-/* Box alamat */
-.address-box{
-    background:white;
-    color:#333;
-    border-radius:10px;
-    padding:10px 14px;
-    min-width:250px;
-    max-width:300px;
-    min-height:58px;
-    font-size:14px;
-    line-height:1.5;
-}
-
-/* Link edit alamat */
-.edit-address-link{
+    background:linear-gradient(90deg, #FFA4A4, #ffb7b7);
     color:white;
-    text-decoration:underline;
+    box-shadow:0 8px 18px rgba(255,164,164,0.28);
+}
+
+.transfer-box{
+    background:#fff5f5;
+    border:1px dashed #ffb3b3;
+    border-radius:18px;
+    padding:16px;
     font-size:14px;
-    margin-top:5px;
-    display:inline-block;
+    color:#666;
+    margin-bottom:24px;
 }
 
-/* Box kurir */
-.shipping-box{
-    background:white;
-    color:#333;
-    border-radius:10px;
-    padding:12px;
-    width:250px;
+/* ===============================
+   ADDRESS BOX
+================================ */
+.address-box{
+    background:#fffaf9;
+    border:1px solid #f4dddd;
+    border-radius:20px;
+    padding:18px;
+    min-height:110px;
+    font-size:14px;
+    line-height:1.7;
+    color:#444;
 }
 
-.shipping-box label{
+.edit-address-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-top:12px;
+    color:var(--primary-dark);
+    font-weight:600;
+    font-size:14px;
+}
+
+/* ===============================
+   FORM ELEMENT
+================================ */
+.form-label{
     font-size:14px;
     font-weight:600;
-    margin-bottom:4px;
+    margin-bottom:8px;
+    color:#444;
+}
+
+.form-select,
+.form-control{
+    border-radius:14px;
+    min-height:48px;
+    border:1px solid #ead6d6;
+    box-shadow:none !important;
+}
+
+.form-select:focus,
+.form-control:focus{
+    border-color:#FFA4A4;
+}
+
+/* ===============================
+   SUMMARY
+================================ */
+.summary-card{
+    background:linear-gradient(180deg, #fff8f8, #ffffff);
+    border:1px solid #f3dede;
+    border-radius:24px;
+    padding:24px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+    font-size:15px;
+}
+
+.summary-row span:last-child{
+    font-weight:600;
+}
+
+.summary-total{
+    border-top:1px dashed #e5caca;
+    margin-top:16px;
+    padding-top:18px;
+    font-size:20px;
+    font-weight:700;
+}
+
+.order-btn{
+    width:100%;
+    background:linear-gradient(90deg, #FFA4A4, #ff8f8f);
+    color:white;
+    border:none;
+    padding:14px 22px;
+    border-radius:16px;
+    font-weight:700;
+    transition:0.25s ease;
+    box-shadow:0 12px 24px rgba(255,164,164,0.28);
+}
+
+.order-btn:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+
+.order-btn-outline{
+    width:100%;
+    background:white;
+    color:var(--primary-dark);
+    border:1px solid #f3d0d0;
+    padding:14px 22px;
+    border-radius:16px;
+    font-weight:700;
+    transition:0.25s ease;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.order-btn-outline:hover{
+    color:var(--primary-dark);
+    transform:translateY(-2px);
+}
+
+/* ===============================
+   MODAL
+================================ */
+.modal-content{
+    border:none;
+    border-radius:24px;
+    overflow:hidden;
+}
+
+.modal-header{
+    background:#fff7f7;
+    border-bottom:1px solid #f1d9d9;
+}
+
+.modal-title{
+    font-weight:700;
+}
+
+.modal-body p{
+    margin-bottom:12px;
+    line-height:1.7;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media(max-width: 992px){
+    .checkout-layout{
+        grid-template-columns:1fr;
+    }
+
+    .navbar{
+        padding:16px 20px;
+    }
+
+    .navbar-brand{
+        font-size:32px;
+    }
+}
+
+@media(max-width: 576px){
+    .left-panel,
+    .right-panel{
+        padding:20px;
+        border-radius:22px;
+    }
+
+    .checkout-card{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .product-price{
+        align-self:flex-end;
+    }
+
+    .payment-methods{
+        flex-wrap:wrap;
+    }
 }
 </style>
 </head>
@@ -228,7 +500,7 @@ body{
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg px-5">
+<nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="index.php">BuyBuy</a>
 
     <div class="ms-auto d-flex align-items-center">
@@ -244,250 +516,275 @@ body{
     </div>
 </nav>
 
-<div class="container mt-5">
+<div class="container py-4">
 
-<div class="tabs-wrapper">
+    <!-- HEADER -->
+    <div class="page-header">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="index.php" class="back-link">
+                <i class="bi bi-arrow-left fs-5"></i>
+            </a>
 
-    <!-- Tombol back -->
-    <div class="back-btn">
-        <a href="index.php">
-            <i class="bi bi-arrow-left"></i>
-        </a>
-    </div>
-
-    <!-- Tabs -->
-    <div class="cart-tabs">
-        <a href="cart.php">Cart</a>
-        <a href="checkout.php" class="active">Checkout</a>
-        <a href="history.php">History Transaction</a>
-    </div>
-
-</div>
-
-<!-- Jika cart kosong -->
-<?php if(empty($cart)): ?>
-
-<div class="alert alert-warning text-center">
-    Cart Is Empty
-</div>
-
-<?php else: ?>
-
-<!-- Loop semua item cart -->
-<?php foreach($cart as $id => $qty): 
-
-    // Ambil data produk lengkap
-    $query = mysqli_query($conn,"SELECT * FROM products WHERE id=$id");
-    $product = mysqli_fetch_assoc($query);
-
-    // Hitung subtotal per item
-    $subtotal = $product['price'] * $qty;
-?>
-
-<div class="checkout-card">
-    <div class="d-flex align-items-center gap-3">
-
-        <!-- Gambar produk -->
-        <img src="../assets/uploads/<?= $product['image']; ?>" class="product-img">
-
-        <!-- Info produk -->
-        <div>
-            <strong><?= $product['name']; ?></strong><br>
-            Qty: <?= $qty; ?>
-        </div>
-    </div>
-
-    <!-- Subtotal -->
-    <strong>
-        Rp <?= number_format($subtotal,0,',','.'); ?>
-    </strong>
-</div>
-
-<?php endforeach; ?>
-<?php endif; ?>
-
-</div>
-
-<!-- FORM START -->
-<form method="POST" action="../process/process-checkout.php" enctype="multipart/form-data">
-
-<div class="checkout-bottom">
-
-    <!-- Pilih metode pembayaran -->
-    <div class="mb-3">
-        <button type="button" id="btnTransfer" class="method-btn method-active">
-            Transfer
-        </button>
-
-        <button type="button" id="btnCOD" class="method-btn">
-            COD
-        </button>
-
-        <!-- Hidden input untuk kirim metode pembayaran -->
-        <input type="hidden" name="payment_method" id="paymentMethod" value="transfer">
-    </div>
-
-    <!-- Info transfer -->
-    <div id="transferSection" class="mb-3">
-        <em>Transfer Here : 087864200621 ( Via Dana )</em>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-between">
-
-        <div class="d-flex gap-3 align-items-center flex-wrap">
-
-            <!-- ADDRESS OTOMATIS -->
             <div>
-                <div class="address-box">
+                <div class="page-title">Checkout</div>
+                <div class="page-subtitle">Review your items and complete your order</div>
+            </div>
+        </div>
 
-    <!-- Jika alamat ada -->
-    <?php if(!empty($user['address'])): ?>
+        <!-- Tabs -->
+        <div class="cart-tabs">
+            <a href="cart.php">Cart</a>
+            <a href="checkout.php" class="active">Checkout</a>
+            <a href="history.php">History Transaction</a>
+        </div>
+    </div>
 
-        <strong><?= htmlspecialchars(!empty($user['full_name']) ? $user['full_name'] : $user['username']); ?></strong><br>
+    <!-- FORM START -->
+    <form method="POST" action="../process/process-checkout.php" enctype="multipart/form-data">
 
-        <?= nl2br(htmlspecialchars($user['address'])); ?>
+        <div class="checkout-layout">
 
-    <?php else: ?>
+            <!-- LEFT SIDE -->
+            <div class="left-panel">
 
-        <!-- Jika belum isi alamat -->
-        <span class="text-danger">Fill Address First</span>
+                <div class="section-title">
+                    <i class="bi bi-bag-check-fill"></i> Order Items
+                </div>
 
-    <?php endif; ?>
+                <!-- Jika cart kosong -->
+                <?php if(empty($cart)): ?>
 
-</div>
+                    <div class="empty-box">
+                        Cart Is Empty
+                    </div>
 
-                <!-- Link edit alamat -->
-                <a href="profile.php" class="edit-address-link">
-                    Edit Address
-                </a>
+                <?php else: ?>
+
+                    <!-- Loop semua item cart -->
+                    <?php foreach($cart as $id => $qty): 
+
+                        // Ambil data produk lengkap
+                        $query = mysqli_query($conn,"SELECT * FROM products WHERE id=$id");
+                        $product = mysqli_fetch_assoc($query);
+
+                        // Hitung subtotal per item
+                        $subtotal = $product['price'] * $qty;
+                    ?>
+
+                    <div class="checkout-card">
+                        <div class="d-flex align-items-center gap-3">
+
+                            <!-- Gambar produk -->
+                            <img src="../assets/uploads/<?= $product['image']; ?>" class="product-img">
+
+                            <!-- Info produk -->
+                            <div>
+                                <div class="product-name"><?= $product['name']; ?></div>
+                                <div class="product-qty">Qty: <?= $qty; ?></div>
+                            </div>
+                        </div>
+
+                        <!-- Subtotal -->
+                        <div class="product-price">
+                            Rp <?= number_format($subtotal,0,',','.'); ?>
+                        </div>
+                    </div>
+
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
             </div>
 
-            <!-- Hidden alamat untuk dikirim ke server -->
-            <input type="hidden" name="address" value="<?= htmlspecialchars($user['address'] ?? ''); ?>">
+            <!-- RIGHT SIDE -->
+            <div class="right-panel">
 
-            <!-- PILIH KURIR -->
-            <div class="shipping-box">
-                <label for="courier">Courier</label>
-                <select name="courier" id="courier" class="form-select mb-2" required>
-                    <option value=""> </option>
-                    <option value="JNE">JNE</option>
-                    <option value="J&T">J&T</option>
-                    <option value="SiCepat">SiCepat</option>
-                    <option value="AnterAja">AnterAja</option>
-                    <option value="Ninja Xpress">Ninja Xpress</option>
-                </select>
+                <div class="section-title">
+                    <i class="bi bi-credit-card-2-front-fill"></i> Payment & Shipping
+                </div>
 
-                <label for="shipping_service">Shipping Service</label>
-                <select name="shipping_service" id="shipping_service" class="form-select" required>
-                    <option value=""> </option>
-                    <option value="Regular">Regular</option>
-                    <option value="Express">Express</option>
-                </select>
-            </div>
+                <!-- Pilih metode pembayaran -->
+                <div class="payment-methods">
+                    <button type="button" id="btnTransfer" class="method-btn method-active">
+                        <i class="bi bi-bank2 me-1"></i> Transfer
+                    </button>
 
-            <!-- Upload bukti pembayaran -->
-            <div id="uploadSection">
-                <input type="file"
-                       name="payment_proof"
-                       class="form-control"
-                       style="width:250px;">
+                    <button type="button" id="btnCOD" class="method-btn">
+                        <i class="bi bi-truck me-1"></i> COD
+                    </button>
+
+                    <!-- Hidden input untuk kirim metode pembayaran -->
+                    <input type="hidden" name="payment_method" id="paymentMethod" value="transfer">
+                </div>
+
+                <!-- Info transfer -->
+                <div id="transferSection" class="transfer-box">
+                    <em>Transfer Here : 087864200621 ( Via Dana )</em>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="mb-4">
+                    <label class="form-label">Shipping Address</label>
+                    <div class="address-box">
+
+                        <!-- Jika alamat ada -->
+                        <?php if(!empty($user['address'])): ?>
+
+                            <strong><?= htmlspecialchars(!empty($user['full_name']) ? $user['full_name'] : $user['username']); ?></strong><br>
+                            <?= nl2br(htmlspecialchars($user['address'])); ?>
+
+                        <?php else: ?>
+
+                            <!-- Jika belum isi alamat -->
+                            <span class="text-danger">Fill Address First</span>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                    <!-- Link edit alamat -->
+                    <a href="profile.php" class="edit-address-link">
+                        <i class="bi bi-pencil-square"></i> Edit Address
+                    </a>
+                </div>
+
+                <!-- Hidden alamat untuk dikirim ke server -->
+                <input type="hidden" name="address" value="<?= htmlspecialchars($user['address'] ?? ''); ?>">
+
+                <!-- KURIR -->
+                <div class="mb-3">
+                    <label for="courier" class="form-label">Courier</label>
+                    <select name="courier" id="courier" class="form-select" required>
+                        <option value="">Select Courier</option>
+                        <option value="JNE">JNE</option>
+                        <option value="J&T">J&T</option>
+                        <option value="SiCepat">SiCepat</option>
+                        <option value="AnterAja">AnterAja</option>
+                        <option value="Ninja Xpress">Ninja Xpress</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="shipping_service" class="form-label">Shipping Service</label>
+                    <select name="shipping_service" id="shipping_service" class="form-select" required>
+                        <option value="">Select Service</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Express">Express</option>
+                    </select>
+                </div>
+
+                <!-- Upload bukti pembayaran -->
+                <div id="uploadSection" class="mb-4">
+                    <label class="form-label">Payment Proof</label>
+                    <input type="file"
+                           name="payment_proof"
+                           class="form-control">
+                </div>
+
+                <!-- SUMMARY -->
+                <div class="summary-card">
+                    <div class="section-title mb-3">
+                        <i class="bi bi-receipt-cutoff"></i> Order Summary
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span><?= "Rp " . number_format($total,0,',','.'); ?></span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Shipping Cost</span>
+                        <span id="shippingCostText">Rp 0</span>
+                    </div>
+
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span id="finalTotalText">Rp <?= number_format($total,0,',','.'); ?></span>
+                    </div>
+
+                    <!-- Hidden subtotal -->
+                    <input type="hidden" id="subtotalValue" value="<?= $total ?>">
+
+                    <!-- Hidden shipping cost -->
+                    <input type="hidden" name="shipping_cost" id="shippingCostInput" value="0">
+
+                    <!-- Jika alamat kosong -->
+                    <?php if(empty($user['address'])): ?>
+
+                        <a href="profile.php" class="order-btn-outline mt-3">
+                            Fill Address First
+                        </a>
+
+                    <?php else: ?>
+
+                        <!-- Tombol order (trigger modal) -->
+                        <button type="button" 
+                                class="order-btn mt-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmModal">
+                            Confirm Order
+                        </button>
+
+                    <?php endif; ?>
+                </div>
+
             </div>
 
         </div>
 
-        <div class="d-flex align-items-center gap-4">
+        <!-- MODAL KONFIRMASI -->
+        <div class="modal fade" id="confirmModal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-            <!-- Total harga -->
-            <div class="text-end">
-                <div><small>Shipping Cost: <span id="shippingCostText">Rp 0</span></small></div>
-                <strong>
-                    Total : <span id="finalTotalText">Rp <?= number_format($total,0,',','.'); ?></span>
-                </strong>
-            </div>
+              <div class="modal-header">
+                <h5 class="modal-title">Confirm Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
 
-            <!-- Hidden subtotal -->
-            <input type="hidden" id="subtotalValue" value="<?= $total ?>">
+              <div class="modal-body">
 
-            <!-- Hidden shipping cost -->
-            <input type="hidden" name="shipping_cost" id="shippingCostInput" value="0">
+                <!-- Tampilkan total -->
+                <p><strong>Total:</strong> <span id="modalTotalText">Rp <?= number_format($total,0,',','.'); ?></span></p>
 
-            <!-- Jika alamat kosong -->
-            <?php if(empty($user['address'])): ?>
+                <!-- Tampilkan metode pembayaran -->
+                <p><strong>Payment Method:</strong> 
+                    <span id="modalPaymentMethod">Transfer</span>
+                </p>
 
-                <a href="profile.php" class="order-btn text-decoration-none d-inline-flex align-items-center">
-                    Fill Address First
-                </a>
+                <!-- Tampilkan kurir -->
+                <p><strong>Courier:</strong> <span id="modalCourier">-</span></p>
+                <p><strong>Service:</strong> <span id="modalService">-</span></p>
+                <p><strong>Shipping Cost:</strong> <span id="modalShippingCost">Rp 0</span></p>
 
-            <?php else: ?>
+                <!-- Tampilkan alamat -->
+                <p><strong>Address:</strong><br>
+                    <?= !empty($user['address']) ? nl2br(htmlspecialchars($user['address'])) : '-' ?>
+                </p>
 
-                <!-- Tombol order (trigger modal) -->
-                <button type="button" 
-                        class="order-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#confirmModal">
-                    Order
+              </div>
+
+              <div class="modal-footer">
+
+                <!-- Cancel -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
                 </button>
 
-            <?php endif; ?>
+                <!-- Submit form -->
+                <button type="submit" class="btn btn-danger">
+                    Confirm Order
+                </button>
 
+              </div>
+
+            </div>
+          </div>
         </div>
 
-    </div>
+    </form>
+    <!-- FORM END -->
 
 </div>
-
-<!-- MODAL KONFIRMASI -->
-<div class="modal fade" id="confirmModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Confirm Order</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <!-- Tampilkan total -->
-        <p><strong>Total:</strong> <span id="modalTotalText">Rp <?= number_format($total,0,',','.'); ?></span></p>
-
-        <!-- Tampilkan metode pembayaran -->
-        <p><strong>Payment Method:</strong> 
-            <span id="modalPaymentMethod">Transfer</span>
-        </p>
-
-        <!-- Tampilkan kurir -->
-        <p><strong>Courier:</strong> <span id="modalCourier">-</span></p>
-        <p><strong>Service:</strong> <span id="modalService">-</span></p>
-        <p><strong>Shipping Cost:</strong> <span id="modalShippingCost">Rp 0</span></p>
-
-        <!-- Tampilkan alamat -->
-        <p><strong>Address:</strong><br>
-            <?= !empty($user['address']) ? nl2br(htmlspecialchars($user['address'])) : '-' ?>
-        </p>
-
-      </div>
-
-      <div class="modal-footer">
-
-        <!-- Cancel -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Cancel
-        </button>
-
-        <!-- Submit form -->
-        <button type="submit" class="btn btn-danger">
-            Confirm Order
-        </button>
-
-      </div>
-
-    </div>
-  </div>
-</div>
-
-</form>
-<!-- FORM END -->
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
