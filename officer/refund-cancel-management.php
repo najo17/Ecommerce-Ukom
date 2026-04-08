@@ -181,16 +181,77 @@ $refund_requests = mysqli_query($conn, "
             margin-bottom:40px;
         }
 
-        .table thead th{
-            background:#FFA4A4 !important;
-            color:#fff !important;
-            text-align:center;
-            vertical-align:middle;
+        /* Wrapper tabel modern */
+        .table-wrapper {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
         }
 
-        .table td{
-            text-align:center;
-            vertical-align:middle;
+        .table { margin-bottom: 0; }
+
+        .table thead th {
+            background: transparent !important;
+            color: #888 !important;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #eee !important;
+            padding-bottom: 15px;
+        }
+
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid #f8f8f8;
+            padding: 15px 10px;
+            color: #555;
+        }
+
+        .table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: #fcfcfc;
+        }
+
+        /* Soft Badges */
+        .badge-soft-success {
+            background-color: rgba(99, 199, 138, 0.15) !important;
+            color: #409960 !important;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .badge-soft-warning {
+            background-color: rgba(241, 150, 67, 0.15) !important;
+            color: #d67a21 !important;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .badge-soft-danger {
+            background-color: rgba(235, 76, 76, 0.15) !important;
+            color: #EB4C4C !important;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .badge-soft-primary {
+            background-color: rgba(85, 110, 230, 0.15) !important;
+            color: #556ee6 !important;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
         }
 
         .reason-box{
@@ -233,8 +294,8 @@ $refund_requests = mysqli_query($conn, "
         <?php if(mysqli_num_rows($cancel_requests) == 0): ?>
             <div class="alert alert-warning">No cancel requests found.</div>
         <?php else: ?>
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+        <div class="table-wrapper table-responsive">
+            <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -257,11 +318,11 @@ $refund_requests = mysqli_query($conn, "
                         <td>
                             <?php
                             if($row['status'] == 'pending'){
-                                echo '<span class="badge bg-warning text-dark">Pending</span>';
+                                echo '<span class="badge badge-soft-warning">Pending</span>';
                             } elseif($row['status'] == 'approved'){
-                                echo '<span class="badge bg-success">Approved</span>';
+                                echo '<span class="badge badge-soft-success">Approved</span>';
                             } else {
-                                echo '<span class="badge bg-danger">Rejected</span>';
+                                echo '<span class="badge badge-soft-danger">Rejected</span>';
                             }
                             ?>
                         </td>
@@ -297,8 +358,8 @@ $refund_requests = mysqli_query($conn, "
         <?php if(mysqli_num_rows($refund_requests) == 0): ?>
             <div class="alert alert-warning">No refund requests found.</div>
         <?php else: ?>
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+        <div class="table-wrapper table-responsive">
+            <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -329,13 +390,13 @@ $refund_requests = mysqli_query($conn, "
                         <td>
                             <?php
                             if($row['status'] == 'pending'){
-                                echo '<span class="badge bg-warning text-dark">Pending</span>';
+                                echo '<span class="badge badge-soft-warning">Pending</span>';
                             } elseif($row['status'] == 'approved'){
-                                echo '<span class="badge bg-success">Approved</span>';
+                                echo '<span class="badge badge-soft-success">Approved</span>';
                             } elseif($row['status'] == 'refunded'){
-                                echo '<span class="badge bg-primary">Refunded</span>';
+                                echo '<span class="badge badge-soft-primary">Refunded</span>';
                             } else {
-                                echo '<span class="badge bg-danger">Rejected</span>';
+                                echo '<span class="badge badge-soft-danger">Rejected</span>';
                             }
                             ?>
                         </td>

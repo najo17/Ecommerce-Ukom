@@ -86,38 +86,56 @@ $total_request_pending = $total_cancel_pending + $total_refund_pending;
             gap: 30px;
         }
 
-        /* Kartu statistik */
+        /* Kartu statistik modern */
         .stat-card {
             background: #fff;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             border: none;
             text-decoration: none;
-            display: block;
-            transition: 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 14px 26px rgba(0,0,0,0.08);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
         }
 
-        /* Judul di dalam kartu */
-        .stat-card h3 {
-            font-size: 16px;
+        .stat-info h3 {
+            font-size: 15px;
             font-weight: 500;
-            color: #888; /* Abu medium */
-            margin-bottom: 15px;
+            color: #888;
+            margin-bottom: 8px;
         }
 
-        /* Angka atau nilai statistik dalam kartu */
-        .stat-card p {
-            font-size: 42px;
-            font-weight: 600;
-            color: #FFA4A4; /* Warna pink/merah muda */
-            margin: 0; /* Hilangkan margin default */
+        .stat-info p {
+            font-size: 38px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+            line-height: 1;
         }
+
+        /* Ikon bulat pada stat card */
+        .icon-box {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        /* Warna icon tiap kartu */
+        .icon-blue { background: rgba(85, 110, 230, 0.1); color: #556ee6; }
+        .icon-orange { background: rgba(241, 150, 67, 0.1); color: #f19643; }
+        .icon-green { background: rgba(99, 199, 138, 0.15); color: #409960; }
+        .icon-pink { background: rgba(255, 164, 164, 0.15); color: #FFA4A4; }
     </style>
 </head>
 
@@ -136,30 +154,46 @@ $total_request_pending = $total_cancel_pending + $total_refund_pending;
 
             <!-- Kartu 1: Total Produk -->
             <div class="stat-card">
-                <h3>Total Products</h3>
-                <!-- Menampilkan jumlah total produk dari query PHP -->
-                <p><?= $total_produk ?></p>
+                <div class="stat-info">
+                    <h3>Total Products</h3>
+                    <p><?= $total_produk ?></p>
+                </div>
+                <div class="icon-box icon-blue">
+                    <i class="bi bi-box-seam"></i>
+                </div>
             </div>
 
             <!-- Kartu 2: Pending Payments -->
             <div class="stat-card">
-                <h3>Pending Payments</h3>
-                <!-- Menampilkan jumlah transaksi pending -->
-                <p><?= $total_belum_acc ?></p>
+                <div class="stat-info">
+                    <h3>Pending Payments</h3>
+                    <p><?= $total_belum_acc ?></p>
+                </div>
+                <div class="icon-box icon-orange">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
             </div>
 
             <!-- Kartu 3: Total Transactions -->
             <div class="stat-card">
-                <h3>Total Transactions</h3>
-                <!-- Menampilkan jumlah total transaksi -->
-                <p><?= $total_transaksi ?></p>
+                <div class="stat-info">
+                    <h3>Total Transactions</h3>
+                    <p><?= $total_transaksi ?></p>
+                </div>
+                <div class="icon-box icon-green">
+                    <i class="bi bi-cart-check"></i>
+                </div>
             </div>
 
             <!-- Kartu 4: Refund & Cancel Requests -->
             <a href="refund-cancel-management.php" class="stat-card">
-                <h3>Refund & Cancel Requests</h3>
-                <!-- Menampilkan jumlah request pending -->
-                <p><?= $total_request_pending ?></p>
+                <div class="stat-info">
+                    <h3>Pending Requests</h3>
+                    <p><?= $total_request_pending ?></p>
+                </div>
+                <div class="icon-box icon-pink">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
             </a>
         </div>
     </div>

@@ -80,28 +80,94 @@ body {
     background: #FFA4A4;
     color: white;
 }
-/* Tabel */
-.table thead th {
-    background: #FFA4A4 !important;
-    color: white !important;
-    text-align: center;
+/* Wrapper tabel modern */
+.table-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
+
+.table { margin-bottom: 0; }
+
+.table thead th {
+    background: transparent !important;
+    color: #888 !important;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px;
+}
+
 .table td {
     text-align: center;
     vertical-align: middle;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px 10px;
+    color: #555;
 }
+
+.table tbody tr {
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Soft Badges */
+.badge-soft-success {
+    background-color: rgba(99, 199, 138, 0.15) !important;
+    color: #409960 !important;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.badge-soft-warning {
+    background-color: rgba(241, 150, 67, 0.15) !important;
+    color: #d67a21 !important;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.badge-soft-danger {
+    background-color: rgba(235, 76, 76, 0.15) !important;
+    color: #EB4C4C !important;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
 /* Tombol aksi view */
 .action-box {
-    width: 43px;
-    height: 43px;
-    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
 }
-.action-view { background-color: #63C78A; }
+
+.action-view {
+    background-color: rgba(85, 110, 230, 0.15);
+    color: #556ee6;
+}
+
+.action-view:hover {
+    background-color: #556ee6;
+    color: #fff;
+    transform: scale(1.05);
+}
+
 /* Garis dashed di struk */
 .receipt-line {
     border-bottom: 1px dashed #ccc;
@@ -138,110 +204,116 @@ body {
 
 <!-- ================= STOCK ================= -->
 <div class="tab-pane fade show active" id="stock">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Stock</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($row = mysqli_fetch_assoc($stock)) : ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['name'] ?></td>
-                <td><?= $row['category'] ?></td>
-                <td><?= $row['stock'] ?></td>
-                <td>Rp <?= number_format($row['price']) ?></td>
-            </tr>
-        <?php endwhile; ?>
-        </tbody>
-    </table>
+    <div class="table-wrapper table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while($row = mysqli_fetch_assoc($stock)) : ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= $row['name'] ?></td>
+                    <td><?= $row['category'] ?></td>
+                    <td><?= $row['stock'] ?></td>
+                    <td>Rp <?= number_format($row['price']) ?></td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- ================= SALES ================= -->
 <div class="tab-pane fade" id="sales">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Product</th>
-                <th>Date</th>
-                <th>Qty</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($row = mysqli_fetch_assoc($sales)) : ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['product_name'] ?></td>
-                <td><?= date('d/m/Y', strtotime($row['created_at'])) ?></td>
-                <td><?= $row['quantity'] ?></td>
-                <td>Rp <?= number_format($row['subtotal']) ?></td>
-            </tr>
-        <?php endwhile; ?>
-        </tbody>
-    </table>
+    <div class="table-wrapper table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while($row = mysqli_fetch_assoc($sales)) : ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= $row['product_name'] ?></td>
+                    <td><?= date('d/m/Y', strtotime($row['created_at'])) ?></td>
+                    <td><?= $row['quantity'] ?></td>
+                    <td>Rp <?= number_format($row['subtotal']) ?></td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- ================= TRANSACTION ================= -->
 <div class="tab-pane fade" id="transaction">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($row = mysqli_fetch_assoc($transaction)) : ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['customer_name'] ?></td>
-                <td><?= date('d/m/Y', strtotime($row['created_at'])) ?></td>
-                <td>Rp <?= number_format($row['total']) ?></td>
-                <td><?= ucfirst($row['payment_method']) ?></td>
-                <td>
-                    <?php
-                    // Menentukan badge status transaksi
-                    $status = strtolower($row['status']);
-                    if($status == 'approved'){
-                        echo '<span class="badge bg-success">Approved</span>';
-                    } elseif($status == 'pending'){
-                        echo '<span class="badge bg-warning text-dark">Pending</span>';
-                    } else {
-                        echo '<span class="badge bg-danger">Cancelled</span>';
-                    }
-                    ?>
-                </td>
-                <td>
-                    <!-- Tombol view detail transaksi -->
-                    <div class="action-box action-view"
-                        data-bs-toggle="modal"
-                        data-bs-target="#receiptModal"
-                        data-id="<?= $row['id'] ?>"
-                        data-customer="<?= $row['customer_name'] ?>"
-                        data-total="<?= $row['total'] ?>"
-                        data-payment="<?= $row['payment_method'] ?>"
-                        data-status="<?= $row['status'] ?>"
-                        data-proof="<?= $row['payment_proof'] ?>"
-                        data-date="<?= $row['created_at'] ?>">
-                        <i class="bi bi-eye"></i>
-                    </div>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-        </tbody>
-    </table>
+    <div class="table-wrapper table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while($row = mysqli_fetch_assoc($transaction)) : ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= $row['customer_name'] ?></td>
+                    <td><?= date('d/m/Y', strtotime($row['created_at'])) ?></td>
+                    <td>Rp <?= number_format($row['total']) ?></td>
+                    <td><?= ucfirst($row['payment_method']) ?></td>
+                    <td>
+                        <?php
+                        // Menentukan badge status transaksi
+                        $status = strtolower($row['status']);
+                        if($status == 'approved'){
+                            echo '<span class="badge badge-soft-success">Approved</span>';
+                        } elseif($status == 'pending'){
+                            echo '<span class="badge badge-soft-warning">Pending</span>';
+                        } else {
+                            echo '<span class="badge badge-soft-danger">Cancelled</span>';
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <!-- Tombol view detail transaksi -->
+                        <div class="action-box action-view"
+                            data-bs-toggle="modal"
+                            data-bs-target="#receiptModal"
+                            data-id="<?= $row['id'] ?>"
+                            data-customer="<?= htmlspecialchars($row['customer_name']) ?>"
+                            data-total="<?= $row['total'] ?>"
+                            data-payment="<?= htmlspecialchars($row['payment_method']) ?>"
+                            data-status="<?= htmlspecialchars($row['status']) ?>"
+                            data-proof="<?= htmlspecialchars($row['payment_proof']) ?>"
+                            data-date="<?= $row['created_at'] ?>">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </div>
@@ -254,7 +326,7 @@ body {
 <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
 <!-- Header Modal -->
-<div class="modal-header text-white"
+<div class="modal-header text-white border-0"
      style="background:linear-gradient(135deg,#FFA4A4,#FF7E7E);">
 <h5 class="modal-title fw-semibold">
 <i class="bi bi-receipt-cutoff me-2"></i>Transaction Receipt
@@ -349,11 +421,11 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
     let status = button.getAttribute('data-status').toLowerCase();
     let badge = '';
     if(status === 'approved'){
-        badge = '<span class="badge bg-success px-3 py-1">Approved</span>';
+        badge = '<span class="badge badge-soft-success px-3 py-1">Approved</span>';
     } else if(status === 'pending'){
-        badge = '<span class="badge bg-warning text-dark px-3 py-1">Pending</span>';
+        badge = '<span class="badge badge-soft-warning px-3 py-1">Pending</span>';
     } else {
-        badge = '<span class="badge bg-danger px-3 py-1">Cancelled</span>';
+        badge = '<span class="badge badge-soft-danger px-3 py-1">Cancelled</span>';
     }
     document.getElementById('r-status').innerHTML = badge;
 
@@ -367,7 +439,7 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
                  class="img-fluid rounded shadow-sm border">
         `;
     } else {
-        proofArea.innerHTML = `<span class="badge bg-info px-3 py-1">No Proof (COD)</span>`;
+        proofArea.innerHTML = `<span class="badge badge-soft-secondary px-3 py-1">No Proof (COD)</span>`;
     }
 });
 </script>
