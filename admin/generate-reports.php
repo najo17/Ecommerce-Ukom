@@ -395,6 +395,23 @@ data-date="<?= $row['created_at'] ?>">
 <span>Rp <span id="r-total"></span></span>
 </div>
 
+
+<!-- SHIPPING INFO -->
+<div class="d-flex justify-content-between mb-2">
+    <span>Courier</span>
+    <span id="r-courier"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Service</span>
+    <span id="r-service"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Shipping Cost</span>
+    <span>Rp <span id="r-shipping"></span></span>
+</div>
+
 <hr>
 
 <!-- Area untuk menampilkan bukti pembayaran -->

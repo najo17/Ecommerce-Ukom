@@ -53,7 +53,7 @@ $transactions = mysqli_query($conn, "
         /* Styling body */
         body{ 
             background:#fff; 
-            padding-bottom:200px; /* Space untuk footer/modal */
+            padding-bottom:200px;
             font-family: 'Poppins', sans-serif;
         }
 
@@ -173,12 +173,6 @@ $transactions = mysqli_query($conn, "
         .receipt-box {
             background: #fff;
         }
-
-        /* Garis putus-putus struk */
-        .receipt-line {
-            border-bottom: 1px dashed #ccc;
-            margin: 8px 0;
-        }
     </style>
 </head>
 <body>
@@ -236,7 +230,7 @@ $transactions = mysqli_query($conn, "
                     <th>Total</th>
                     <th>Payment</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Details</th>
                 </tr>
             </thead>
 
@@ -252,15 +246,11 @@ $transactions = mysqli_query($conn, "
                     <td class="product-list">
                         <?php
                         if(!empty($row['products'])){
-                            // Pisahkan produk berdasarkan ##
                             $items = explode('##', $row['products']);
 
                             foreach($items as $item){
-                                // Pisahkan nama+qty dan subtotal
                                 $parts = explode('~~', $item);
                                 $nameQty = $parts[0];
-
-                                // Tampilkan
                                 echo "• " . htmlspecialchars($nameQty) . "<br>";
                             }
                         } else {
@@ -283,23 +273,30 @@ $transactions = mysqli_query($conn, "
                         <?php
                         $status = strtolower($row['status']);
 
-                        if($status == 'approved'){
-                            echo '<span class="badge bg-success">Approved</span>';
-                        } elseif($status == 'pending'){
-                            echo '<span class="badge bg-warning text-dark">Pending</span>';
-                        } else {
-                            echo '<span class="badge bg-danger">Cancelled</span>';
+                            if($status == 'approved'){
+                                echo '<span class="badge bg-success">Approved</span>';
+                            } elseif($status == 'pending'){
+                                echo '<span class="badge bg-warning text-dark">Pending</span>';
+                            } elseif($status == 'cancel_requested'){
+                                echo '<span class="badge bg-secondary">Cancel Requested</span>';
+                            } elseif($status == 'cancelled'){
+                                echo '<span class="badge bg-danger">Cancelled</span>';
+                            } elseif($status == 'refund_requested'){
+                                echo '<span class="badge bg-info text-dark">Refund Requested</span>';
+                            } elseif($status == 'refunded'){
+                                echo '<span class="badge bg-primary">Refunded</span>';
+                            } else {
+                                echo '<span class="badge bg-dark">Unknown</span>';
+
                         }
                         ?>
                     </td>
 
                     <!-- Tombol lihat detail -->
                     <td>
-                        <div class="action-box action-view"
+                        <button type="button" class="action-box action-view border-0"
                             data-bs-toggle="modal"
                             data-bs-target="#receiptModal"
-
-                            
                             data-id="<?= htmlspecialchars($row['id']) ?>"
                             data-customer="<?= htmlspecialchars($row['customer_name']) ?>"
                             data-total="<?= htmlspecialchars($row['total']) ?>"
@@ -308,10 +305,13 @@ $transactions = mysqli_query($conn, "
                             data-proof="<?= htmlspecialchars($row['payment_proof']) ?>"
                             data-date="<?= htmlspecialchars($row['created_at']) ?>"
                             data-address="<?= htmlspecialchars($row['shipping_address']) ?>"
-                            data-products="<?= htmlspecialchars($row['products']) ?>">
+                            data-products="<?= htmlspecialchars($row['products']) ?>"
+                            data-courier="<?= htmlspecialchars($row['courier'] ?? '') ?>"
+                            data-service="<?= htmlspecialchars($row['shipping_service'] ?? '') ?>"
+                            data-shipping="<?= htmlspecialchars($row['shipping_cost'] ?? 0) ?>">
 
                             <i class="bi bi-eye"></i>
-                        </div>
+                        </button>
                     </td>
 
                 </tr>
@@ -374,6 +374,21 @@ $transactions = mysqli_query($conn, "
 
                     <hr>
 
+                    <!-- Shipping Info -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Courier</span><span id="r-courier"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Service</span><span id="r-service"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping Cost</span><span>Rp <span id="r-shipping"></span></span>
+                    </div>
+
+                    <hr>
+
                     <!-- Payment & Status -->
                     <div class="d-flex justify-content-between mb-2">
                         <span>Payment</span><span id="r-payment"></span>
@@ -383,8 +398,14 @@ $transactions = mysqli_query($conn, "
                         <span>Status</span><span id="r-status"></span>
                     </div>
 
+                    <!-- Subtotal Barang -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <span>Subtotal Products</span>
+                        <span>Rp <span id="r-subtotal-products"></span>
+                    </div>
+
                     <!-- Total -->
-                    <div class="d-flex justify-content-between mt-3 fs-5 fw-bold">
+                    <div class="d-flex justify-content-between mt-2 fs-5 fw-bold">
                         <span>Total</span>
                         <span>Rp <span id="r-total"></span></span>
                     </div>
@@ -392,10 +413,12 @@ $transactions = mysqli_query($conn, "
                     <!-- Bukti pembayaran -->
                     <div id="proofArea" class="text-center mt-4"></div>
 
+                    <!-- Tombol aksi customer -->
+                    <div id="customerActionArea" class="text-center mt-4"></div>
+
                     <p class="text-center small mt-4 text-muted">
                         Thank you for shopping
                     </p>
-
                 </div>
             </div>
         </div>
@@ -406,35 +429,51 @@ $transactions = mysqli_query($conn, "
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Ambil modal
 var receiptModal = document.getElementById('receiptModal');
 
-// Event saat modal dibuka
 receiptModal.addEventListener('show.bs.modal', function (event) {
 
-    var button = event.relatedTarget; // Tombol yang diklik
+    var button = event.relatedTarget;
 
-    // Isi data ke modal
-    document.getElementById('r-id').innerText = button.getAttribute('data-id');
-    document.getElementById('r-customer').innerText = button.getAttribute('data-customer');
+    // Isi data dasar
+    document.getElementById('r-id').innerText = button.getAttribute('data-id') || '-';
+    document.getElementById('r-customer').innerText = button.getAttribute('data-customer') || '-';
 
-    // Format total ke rupiah
+    // Format total
+    const total = parseInt(button.getAttribute('data-total')) || 0;
+    const shipping = parseInt(button.getAttribute('data-shipping') || 0) || 0;
+    const subtotalProducts = total - shipping;
+
     document.getElementById('r-total').innerText =
-        new Intl.NumberFormat('id-ID').format(button.getAttribute('data-total'));
+        new Intl.NumberFormat('id-ID').format(total);
+
+    document.getElementById('r-shipping').innerText =
+        new Intl.NumberFormat('id-ID').format(shipping);
+
+    document.getElementById('r-subtotal-products').innerText =
+        new Intl.NumberFormat('id-ID').format(subtotalProducts);
 
     // Payment
-    document.getElementById('r-payment').innerText =
-        button.getAttribute('data-payment').toUpperCase();
+    let payment = button.getAttribute('data-payment') || '-';
+    document.getElementById('r-payment').innerText = payment.toUpperCase();
 
-    // Format tanggal
+    // Courier & Service
+    let courier = button.getAttribute('data-courier') || '-';
+    let service = button.getAttribute('data-service') || '-';
+
+    document.getElementById('r-courier').innerText = courier;
+    document.getElementById('r-service').innerText = service;
+
+    // Date
+    let rawDate = button.getAttribute('data-date');
     document.getElementById('r-date').innerText =
-        new Date(button.getAttribute('data-date')).toLocaleDateString('id-ID');
+        rawDate ? new Date(rawDate).toLocaleDateString('id-ID') : '-';
 
     // Address
     document.getElementById('r-address').innerText =
         button.getAttribute('data-address') || '-';
 
-    // PRODUCTS LIST
+    // Products
     let products = button.getAttribute('data-products');
     let productArea = document.getElementById('r-products');
 
@@ -457,21 +496,29 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
         productArea.innerHTML = `<span class="text-muted">No products</span>`;
     }
 
-    // STATUS BADGE
-    let status = button.getAttribute('data-status').toLowerCase();
+    // Status
+    let status = (button.getAttribute('data-status') || '').toLowerCase();
     let badge = '';
 
     if(status === 'approved'){
         badge = '<span class="badge bg-success">Approved</span>';
     } else if(status === 'pending'){
         badge = '<span class="badge bg-warning text-dark">Pending</span>';
-    } else {
+    } else if(status === 'cancel_requested'){
+        badge = '<span class="badge bg-secondary">Cancel Requested</span>';
+    } else if(status === 'cancelled'){
         badge = '<span class="badge bg-danger">Cancelled</span>';
+    } else if(status === 'refund_requested'){
+        badge = '<span class="badge bg-info text-dark">Refund Requested</span>';
+    } else if(status === 'refunded'){
+        badge = '<span class="badge bg-primary">Refunded</span>';
+    } else {
+        badge = '<span class="badge bg-dark">Unknown</span>';
     }
 
     document.getElementById('r-status').innerHTML = badge;
 
-    // PAYMENT PROOF
+    // Payment proof
     let proof = button.getAttribute('data-proof');
     let proofArea = document.getElementById('proofArea');
 
@@ -483,6 +530,30 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
         `;
     } else {
         proofArea.innerHTML = `<span class="badge bg-info">No Proof (COD)</span>`;
+    }
+
+    // Customer Action Buttons
+    let transactionId = button.getAttribute('data-id');
+    let actionArea = document.getElementById('customerActionArea');
+
+    if(actionArea){
+        if(status === 'pending' || status === 'approved'){
+            actionArea.innerHTML = `
+                <a href="cancel-request.php?id=${transactionId}" class="btn btn-warning me-2">
+                    Ajukan Pembatalan
+                </a>
+            `;
+
+            if(status === 'approved'){
+                actionArea.innerHTML += `
+                    <a href="refund-request.php?id=${transactionId}" class="btn btn-info text-white">
+                        Ajukan Refund
+                    </a>
+                `;
+            }
+        } else {
+            actionArea.innerHTML = '';
+        }
     }
 });
 </script>

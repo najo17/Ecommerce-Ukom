@@ -8,8 +8,11 @@ if(!isset($_SESSION['user_id'])){
 }
 
 $customer_id = $_SESSION['user_id'];
-$payment_method = $_POST['payment_method'];
-$address = mysqli_real_escape_string($conn, trim($_POST['address']));
+$payment_method = mysqli_real_escape_string($conn, $_POST['payment_method'] ?? '');
+$address = mysqli_real_escape_string($conn, trim($_POST['address'] ?? ''));
+$courier = mysqli_real_escape_string($conn, trim($_POST['courier'] ?? ''));
+$shipping_service = mysqli_real_escape_string($conn, trim($_POST['shipping_service'] ?? ''));
+$shipping_cost = (int)($_POST['shipping_cost'] ?? 0);
 $cart = $_SESSION['cart'] ?? [];
 
 /* ================= AMBIL DATA USER ================= */
@@ -29,6 +32,40 @@ if(empty($address)){
     header("Location: ../customer/profile.php");
     exit();
 }
+
+/* ================= VALIDASI KURIR ================= */
+if(empty($courier) || empty($shipping_service)){
+    $_SESSION['error'] = "Please select courier and shipping service!";
+    header("Location: ../customer/checkout.php");
+    exit();
+}
+
+/* ================= VALIDASI ONGKIR SESUAI PILIHAN ================= */
+$valid_shipping_cost = 0;
+
+if ($courier == "JNE" && $shipping_service == "Regular") {
+    $valid_shipping_cost = 10000;
+} elseif ($courier == "JNE" && $shipping_service == "Express") {
+    $valid_shipping_cost = 18000;
+} elseif ($courier == "J&T" && $shipping_service == "Regular") {
+    $valid_shipping_cost = 12000;
+} elseif ($courier == "J&T" && $shipping_service == "Express") {
+    $valid_shipping_cost = 20000;
+} elseif ($courier == "SiCepat" && $shipping_service == "Regular") {
+    $valid_shipping_cost = 11000;
+} elseif ($courier == "SiCepat" && $shipping_service == "Express") {
+    $valid_shipping_cost = 19000;
+} elseif ($courier == "AnterAja" && $shipping_service == "Regular") {
+    $valid_shipping_cost = 9000;
+} elseif ($courier == "AnterAja" && $shipping_service == "Express") {
+    $valid_shipping_cost = 17000;
+} elseif ($courier == "Ninja Xpress" && $shipping_service == "Regular") {
+    $valid_shipping_cost = 13000;
+} elseif ($courier == "Ninja Xpress" && $shipping_service == "Express") {
+    $valid_shipping_cost = 21000;
+}
+
+$shipping_cost = $valid_shipping_cost;
 
 /* ================= VALIDASI PAYMENT PROOF ================= */
 if($payment_method === 'transfer'){
@@ -55,8 +92,8 @@ foreach($cart as $id => $qty){
     }
 }
 
-/* ================= HITUNG TOTAL ================= */
-$total = 0;
+/* ================= HITUNG SUBTOTAL ================= */
+$subtotal_total = 0;
 
 foreach($cart as $id => $qty){
     $id = (int)$id;
@@ -65,8 +102,11 @@ foreach($cart as $id => $qty){
     $query = mysqli_query($conn,"SELECT price FROM products WHERE id=$id");
     $product = mysqli_fetch_assoc($query);
 
-    $total += $product['price'] * $qty;
+    $subtotal_total += $product['price'] * $qty;
 }
+
+/* ================= TOTAL AKHIR ================= */
+$total = $subtotal_total + $shipping_cost;
 
 /* ================= STATUS ================= */
 $status = ($payment_method == 'transfer') ? 'pending' : 'approved';
@@ -78,9 +118,31 @@ try {
 
     /* SIMPAN KE TRANSACTIONS */
     mysqli_query($conn,"INSERT INTO transactions 
-    (customer_id, customer_name, total, payment_method, status, shipping_address, created_at)
+    (
+        customer_id, 
+        customer_name, 
+        total, 
+        payment_method, 
+        courier,
+        shipping_service,
+        shipping_cost,
+        status, 
+        shipping_address, 
+        created_at
+    )
     VALUES
-    ('$customer_id','$customer_name','$total','$payment_method','$status','$address', NOW())
+    (
+        '$customer_id',
+        '$customer_name',
+        '$total',
+        '$payment_method',
+        '$courier',
+        '$shipping_service',
+        '$shipping_cost',
+        '$status',
+        '$address',
+        NOW()
+    )
     ");
 
     $transaction_id = mysqli_insert_id($conn);
@@ -143,3 +205,4 @@ unset($_SESSION['cart']);
 $_SESSION['success'] = "Order successful!";
 header("Location: ../customer/history.php");
 exit();
+?>

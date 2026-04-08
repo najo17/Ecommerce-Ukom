@@ -24,9 +24,13 @@ if(isset($_POST['update_profile'])){
 
     // Query update data user
     $update = mysqli_query($conn, "UPDATE users SET 
-        full_name = '$full_name',
-        address = '$address'
-        WHERE id = '$user_id'
+        full_name='$full_name',
+        address='$address',
+        refund_name='$refund_name',
+        refund_method='$refund_method',
+        refund_number='$refund_number'
+        WHERE id='$user_id'
+        
     ");
 
     // Jika berhasil update
@@ -125,6 +129,36 @@ body{
                     <div class="mb-3">
                         <label class="form-label">Address</label>
                         <textarea name="address" class="form-control" rows="4" required><?= htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                    </div>
+
+                    <div class="card p-4 shadow-sm rounded-4 mt-4">
+                        <h5 class="mb-3">Refund Account</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Name</label>
+                            <input type="text" name="refund_name" class="form-control"
+                                value="<?= htmlspecialchars($user['refund_name'] ?? '') ?>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Refund Method</label>
+                            <select name="refund_method" class="form-control">
+                                <option value="">-- Select --</option>
+                                <option value="BCA" <?= (($user['refund_method'] ?? '') == 'BCA') ? 'selected' : '' ?>>BCA</option>
+                                <option value="BRI" <?= (($user['refund_method'] ?? '') == 'BRI') ? 'selected' : '' ?>>BRI</option>
+                                <option value="BNI" <?= (($user['refund_method'] ?? '') == 'BNI') ? 'selected' : '' ?>>BNI</option>
+                                <option value="MANDIRI" <?= (($user['refund_method'] ?? '') == 'MANDIRI') ? 'selected' : '' ?>>MANDIRI</option>
+                                <option value="DANA" <?= (($user['refund_method'] ?? '') == 'DANA') ? 'selected' : '' ?>>DANA</option>
+                                <option value="OVO" <?= (($user['refund_method'] ?? '') == 'OVO') ? 'selected' : '' ?>>OVO</option>
+                                <option value="GOPAY" <?= (($user['refund_method'] ?? '') == 'GOPAY') ? 'selected' : '' ?>>GOPAY</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Number / Phone</label>
+                            <input type="text" name="refund_number" class="form-control"
+                                value="<?= htmlspecialchars($user['refund_number'] ?? '') ?>">
+                        </div>
                     </div>
 
                     <!-- Tombol submit -->

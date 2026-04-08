@@ -41,8 +41,10 @@ if (isset($_POST['cancel_payment'])) {
    AMBIL DATA TRANSAKSI
 ================================ */
 $transactions = mysqli_query($conn, "
-    SELECT * FROM transactions
-    ORDER BY id DESC
+    SELECT t.*, u.refund_name, u.refund_method, u.refund_number
+FROM transactions t
+LEFT JOIN users u ON t.customer_id = u.id
+ORDER BY t.id DESC
 ");
 
 /* ===============================
@@ -370,6 +372,21 @@ $payment = strtolower($row['payment_method']);
 <div class="d-flex justify-content-between mt-3 fs-5 fw-bold">
     <span>Total</span>
     <span>Rp <span id="r-total"></span></span>
+</div>
+<!-- SHIPPING INFO -->
+<div class="d-flex justify-content-between mb-2">
+    <span>Courier</span>
+    <span id="r-courier"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Service</span>
+    <span id="r-service"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Shipping Cost</span>
+    <span>Rp <span id="r-shipping"></span></span>
 </div>
 
 <div id="proofArea" class="text-center mt-4"></div>

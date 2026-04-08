@@ -29,6 +29,16 @@ $total_transaksi = mysqli_fetch_assoc($transaksi)['total'];
 $belum_acc = mysqli_query($conn, "SELECT COUNT(*) AS total FROM transactions WHERE status = 'pending'");
 // Ambil hasil query sebagai array asosiatif dan simpan jumlah transaksi pending
 $total_belum_acc = mysqli_fetch_assoc($belum_acc)['total'];
+
+// Hitung total request refund + cancel yang masih pending
+$cancel_pending = mysqli_query($conn, "SELECT COUNT(*) AS total FROM cancel_requests WHERE status = 'pending'");
+$total_cancel_pending = mysqli_fetch_assoc($cancel_pending)['total'];
+
+$refund_pending = mysqli_query($conn, "SELECT COUNT(*) AS total FROM refund_requests WHERE status = 'pending'");
+$total_refund_pending = mysqli_fetch_assoc($refund_pending)['total'];
+
+// Total semua request pending
+$total_request_pending = $total_cancel_pending + $total_refund_pending;
 ?>
 
 <!DOCTYPE html>
@@ -71,18 +81,26 @@ $total_belum_acc = mysqli_fetch_assoc($belum_acc)['total'];
 
         /* Container untuk kartu statistik */
         .card-container {
-            display: flex; /* Gunakan flexbox untuk layout horizontal */
-            gap: 30px; /* Jarak antar kartu */
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
         }
 
         /* Kartu statistik */
         .stat-card {
-            flex: 1; /* Membuat semua kartu memiliki lebar sama */
-            background: #fff; /* Latar belakang putih */
-            border-radius: 20px; /* Sudut membulat */
-            padding: 30px; /* Jarak dalam kartu */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Efek bayangan lembut */
-            border: none; /* Hilangkan border default */
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: none;
+            text-decoration: none;
+            display: block;
+            transition: 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 26px rgba(0,0,0,0.08);
         }
 
         /* Judul di dalam kartu */
@@ -136,6 +154,13 @@ $total_belum_acc = mysqli_fetch_assoc($belum_acc)['total'];
                 <!-- Menampilkan jumlah total transaksi -->
                 <p><?= $total_transaksi ?></p>
             </div>
+
+            <!-- Kartu 4: Refund & Cancel Requests -->
+            <a href="refund-cancel-management.php" class="stat-card">
+                <h3>Refund & Cancel Requests</h3>
+                <!-- Menampilkan jumlah request pending -->
+                <p><?= $total_request_pending ?></p>
+            </a>
         </div>
     </div>
 

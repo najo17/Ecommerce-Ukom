@@ -296,6 +296,22 @@ body {
     <span>Rp <span id="r-total"></span></span>
 </div>
 <hr>
+
+<!-- SHIPPING INFO -->
+<div class="d-flex justify-content-between mb-2">
+    <span>Courier</span>
+    <span id="r-courier"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Service</span>
+    <span id="r-service"></span>
+</div>
+
+<div class="d-flex justify-content-between mb-2">
+    <span>Shipping Cost</span>
+    <span>Rp <span id="r-shipping"></span></span>
+</div>
 <!-- Payment proof -->
 <div id="proofArea" class="text-center mt-3"></div>
 

@@ -57,7 +57,7 @@ foreach($cart as $id => $qty){
 /* Background body */
 body{ 
     background:#ffff; 
-    padding-bottom:200px; /* Memberi ruang untuk fixed footer */
+    padding-bottom:260px; /* Ditambah karena ada form kurir */
 }
 
 /* Navbar */
@@ -137,6 +137,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.04);
 }
 
 /* Gambar produk */
@@ -205,6 +206,21 @@ body{
     font-size:14px;
     margin-top:5px;
     display:inline-block;
+}
+
+/* Box kurir */
+.shipping-box{
+    background:white;
+    color:#333;
+    border-radius:10px;
+    padding:12px;
+    width:250px;
+}
+
+.shipping-box label{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:4px;
 }
 </style>
 </head>
@@ -318,7 +334,7 @@ body{
 
     <div class="d-flex align-items-center justify-content-between">
 
-        <div class="d-flex gap-3 align-items-center">
+        <div class="d-flex gap-3 align-items-center flex-wrap">
 
             <!-- ADDRESS OTOMATIS -->
             <div>
@@ -349,6 +365,26 @@ body{
             <!-- Hidden alamat untuk dikirim ke server -->
             <input type="hidden" name="address" value="<?= htmlspecialchars($user['address'] ?? ''); ?>">
 
+            <!-- PILIH KURIR -->
+            <div class="shipping-box">
+                <label for="courier">Courier</label>
+                <select name="courier" id="courier" class="form-select mb-2" required>
+                    <option value=""> </option>
+                    <option value="JNE">JNE</option>
+                    <option value="J&T">J&T</option>
+                    <option value="SiCepat">SiCepat</option>
+                    <option value="AnterAja">AnterAja</option>
+                    <option value="Ninja Xpress">Ninja Xpress</option>
+                </select>
+
+                <label for="shipping_service">Shipping Service</label>
+                <select name="shipping_service" id="shipping_service" class="form-select" required>
+                    <option value=""> </option>
+                    <option value="Regular">Regular</option>
+                    <option value="Express">Express</option>
+                </select>
+            </div>
+
             <!-- Upload bukti pembayaran -->
             <div id="uploadSection">
                 <input type="file"
@@ -362,9 +398,18 @@ body{
         <div class="d-flex align-items-center gap-4">
 
             <!-- Total harga -->
-            <strong>
-                Total : Rp <?= number_format($total,0,',','.'); ?>
-            </strong>
+            <div class="text-end">
+                <div><small>Shipping Cost: <span id="shippingCostText">Rp 0</span></small></div>
+                <strong>
+                    Total : <span id="finalTotalText">Rp <?= number_format($total,0,',','.'); ?></span>
+                </strong>
+            </div>
+
+            <!-- Hidden subtotal -->
+            <input type="hidden" id="subtotalValue" value="<?= $total ?>">
+
+            <!-- Hidden shipping cost -->
+            <input type="hidden" name="shipping_cost" id="shippingCostInput" value="0">
 
             <!-- Jika alamat kosong -->
             <?php if(empty($user['address'])): ?>
@@ -404,12 +449,17 @@ body{
       <div class="modal-body">
 
         <!-- Tampilkan total -->
-        <p><strong>Total:</strong> Rp <?= number_format($total,0,',','.'); ?></p>
+        <p><strong>Total:</strong> <span id="modalTotalText">Rp <?= number_format($total,0,',','.'); ?></span></p>
 
         <!-- Tampilkan metode pembayaran -->
         <p><strong>Payment Method:</strong> 
             <span id="modalPaymentMethod">Transfer</span>
         </p>
+
+        <!-- Tampilkan kurir -->
+        <p><strong>Courier:</strong> <span id="modalCourier">-</span></p>
+        <p><strong>Service:</strong> <span id="modalService">-</span></p>
+        <p><strong>Shipping Cost:</strong> <span id="modalShippingCost">Rp 0</span></p>
 
         <!-- Tampilkan alamat -->
         <p><strong>Address:</strong><br>
@@ -451,37 +501,92 @@ const uploadSection = document.getElementById("uploadSection");
 const paymentInput = document.getElementById("paymentMethod");
 const modalPaymentText = document.getElementById("modalPaymentMethod");
 
+// Kurir
+const courierSelect = document.getElementById("courier");
+const serviceSelect = document.getElementById("shipping_service");
+const shippingCostText = document.getElementById("shippingCostText");
+const shippingCostInput = document.getElementById("shippingCostInput");
+const finalTotalText = document.getElementById("finalTotalText");
+const modalTotalText = document.getElementById("modalTotalText");
+const subtotalValue = parseInt(document.getElementById("subtotalValue").value);
+
+// Modal info
+const modalCourier = document.getElementById("modalCourier");
+const modalService = document.getElementById("modalService");
+const modalShippingCost = document.getElementById("modalShippingCost");
+
+// Format rupiah
+function formatRupiah(number) {
+    return "Rp " + number.toLocaleString("id-ID");
+}
+
+// Hitung ongkir
+function calculateShipping() {
+    let courier = courierSelect.value;
+    let service = serviceSelect.value;
+    let shippingCost = 0;
+
+    if (courier === "JNE" && service === "Regular") {
+        shippingCost = 3000;
+    } else if (courier === "JNE" && service === "Express") {
+        shippingCost = 18000;
+    } else if (courier === "J&T" && service === "Regular") {
+        shippingCost = 4000;
+    } else if (courier === "J&T" && service === "Express") {
+        shippingCost = 19000;
+    } else if (courier === "SiCepat" && service === "Regular") {
+        shippingCost = 3000;
+    } else if (courier === "SiCepat" && service === "Express") {
+        shippingCost = 19000;
+    } else if (courier === "AnterAja" && service === "Regular") {
+        shippingCost = 4000;
+    } else if (courier === "AnterAja" && service === "Express") {
+        shippingCost = 17000;
+    } else if (courier === "Ninja Xpress" && service === "Regular") {
+        shippingCost = 7000;
+    } else if (courier === "Ninja Xpress" && service === "Express") {
+        shippingCost = 21000;
+    }
+
+    let finalTotal = subtotalValue + shippingCost;
+
+    shippingCostText.innerText = formatRupiah(shippingCost);
+    shippingCostInput.value = shippingCost;
+    finalTotalText.innerText = formatRupiah(finalTotal);
+    modalTotalText.innerText = formatRupiah(finalTotal);
+
+    modalCourier.innerText = courier || "-";
+    modalService.innerText = service || "-";
+    modalShippingCost.innerText = formatRupiah(shippingCost);
+}
+
 // Saat tombol Transfer diklik
 btnTransfer.addEventListener("click", function(){
-
-    // Set aktif
     btnTransfer.classList.add("method-active");
     btnCOD.classList.remove("method-active");
 
-    // Tampilkan section transfer
     transferSection.style.display = "block";
     uploadSection.style.display = "block";
 
-    // Set value
     paymentInput.value = "transfer";
     modalPaymentText.innerText = "Transfer";
 });
 
 // Saat tombol COD diklik
 btnCOD.addEventListener("click", function(){
-
-    // Set aktif
     btnCOD.classList.add("method-active");
     btnTransfer.classList.remove("method-active");
 
-    // Sembunyikan section transfer
     transferSection.style.display = "none";
     uploadSection.style.display = "none";
 
-    // Set value
     paymentInput.value = "cod";
     modalPaymentText.innerText = "COD";
 });
+
+// Event kurir
+courierSelect.addEventListener("change", calculateShipping);
+serviceSelect.addEventListener("change", calculateShipping);
 </script>
 
 </body>
