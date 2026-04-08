@@ -77,86 +77,158 @@ if (isset($_POST['login'])) {
         /* Mengatur font utama pada seluruh halaman */
         body {
             font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
         }
 
-        /* Membuat bar berwarna pink di sisi kiri halaman */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            background: #fff;
+        }
+
+        /* Panel Kiri dengan Gradient */
         .left-bar {
-            width: 120px;
-            background-color: #FFA4A4;
+            flex: 1;
+            background: linear-gradient(135deg, #FFA4A4 0%, #FF7E7E 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 992px) {
+            .left-bar { display: flex; }
+            .right-area { flex: 1.2; }
         }
 
-        /* Mengatur ukuran input form dan tombol login */
-        .form-control,
-        .btn-login {
-            width: 518px;
-            height: 86px;
-            border-radius: 40px;
-            font-size: 18px;
+        .left-content {
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
         }
 
-        /* Warna utama tombol login */
+        .left-bar::after {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            top: -200px;
+            right: -200px;
+        }
+
+        /* Panel Kanan (Form) */
+        .right-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: #ffffff;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Styling Input Form Modern */
+        .form-control {
+            width: 100%;
+            height: 56px;
+            border-radius: 16px;
+            border: 2px solid #f0f0f0;
+            background: #fafafa;
+            padding: 0 20px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            border-color: #FFA4A4;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255,164,164,0.15);
+            outline: none;
+        }
+
+        /* Styling Button Login Modern */
         .btn-login {
-            background-color: #FFA4A4;
+            width: 100%;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FFA4A4, #FF8E8E);
             color: white;
             border: none;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255,164,164,0.3);
         }
 
-        /* Warna tombol saat mouse diarahkan ke tombol */
         .btn-login:hover {
-            background-color: #FFBEBE;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255,164,164,0.4);
+            color: white;
         }
     </style>
 </head>
 
-<!-- d-flex = layout flexbox -->
-<!-- vh-100 = tinggi body 100% layar -->
-<body class="d-flex vh-100">
+<body class="login-container">
 
-    <!-- Bagian kiri halaman berupa bar pink -->
-    <div class="left-bar"></div>
+    <!-- Bagian kiri halaman berupa bar pink dengan efek gradien -->
+    <div class="left-bar">
+        <div class="left-content">
+            <!-- Icon/Logo opsional -->
+            <div class="mb-4">
+                <i class="bi bi-shield-lock" style="font-size: 3rem; opacity: 0.9;"></i>
+            </div>
+            <h1 class="fw-bold display-5 mb-3">Welcome Back!</h1>
+            <p class="fs-6 opacity-75 fw-light px-4">Secure Access for Administrator.<br> Manage the store dashboard efficiently.</p>
+        </div>
+    </div>
 
-    <!-- Bagian utama isi login -->
-    <!-- flex-fill = memenuhi sisa ruang -->
-    <!-- d-flex justify-content-center align-items-center = isi berada di tengah -->
-    <div class="flex-fill d-flex justify-content-center align-items-center">
-        <div class="text-center">
+    <!-- Bagian kanan untuk form login -->
+    <div class="right-area">
+        <div class="login-box text-center">
 
             <!-- Judul halaman login -->
-            <h1 class="mb-4">
-                <span class="fw-semibold" style="color:#9CAFAA;">Login for </span>
-                <span class="fw-semibold fst-italic" style="color:#FFA4A4;">Admin</span>
-            </h1>
+            <div class="mb-5 text-start">
+                <h2 class="fw-bold mb-1" style="color: #333;">Sign In <span style="color:#FFA4A4;">Admin</span></h2>
+                <p class="text-muted small">Please enter your credentials.</p>
+            </div>
 
             <!-- Jika ada pesan error, maka tampilkan -->
             <?php if ($error): ?>
-                <div class="text-danger mb-3"><?= $error ?></div>
+                <div class="alert alert-danger" style="border-radius: 12px; font-size: 14px;">
+                    <?= $error ?>
+                </div>
             <?php endif; ?>
 
             <!-- Form login admin -->
-            <!-- method POST digunakan agar data dikirim secara aman dan tidak tampil di URL -->
-            <form method="POST" class="d-flex flex-column align-items-center gap-4">
-
-                <!-- Input username -->
+            <form method="POST">
                 <input 
                     type="text" 
                     name="username" 
-                    class="form-control px-4"
+                    class="form-control"
                     placeholder="Username" 
                     required
                 >
 
-                <!-- Input password -->
                 <input 
                     type="password" 
                     name="password" 
-                    class="form-control px-4"
+                    class="form-control"
                     placeholder="Password" 
                     required
                 >
 
-                <!-- Tombol submit login -->
-                <!-- name="login" digunakan untuk mendeteksi apakah form dikirim -->
-                <button type="submit" name="login" class="btn btn-login">
+                <button type="submit" name="login" class="btn btn-login mt-3">
                     Sign In
                 </button>
             </form>

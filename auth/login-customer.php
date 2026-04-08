@@ -70,6 +70,7 @@ if (isset($_POST['login'])) {
 
 <!-- Menghubungkan Bootstrap 5 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <!-- Menghubungkan font Poppins dari Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -78,38 +79,104 @@ if (isset($_POST['login'])) {
 /* Mengatur font utama untuk seluruh halaman */
 body {
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
 }
 
-/* Membuat bar pink di sebelah kiri halaman */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    background: #fff;
+}
+
+/* Panel Kiri dengan Gradient */
 .left-bar {
-    width: 120px;
-    background-color: #FFA4A4;
+    flex: 1;
+    background: linear-gradient(135deg, #FFA4A4 0%, #FF7E7E 100%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Mengatur ukuran input form dan tombol login */
-.form-control,
-.btn-login {
-    width: 518px;
-    height: 86px;
-    border-radius: 40px;
-    font-size: 18px;
+@media (min-width: 992px) {
+    .left-bar { display: flex; }
+    .right-area { flex: 1.2; }
 }
 
-/* Mengatur border input */
+.left-content {
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+}
+
+.left-bar::after {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    top: -200px;
+    right: -200px;
+}
+
+/* Panel Kanan (Form) */
+.right-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: #ffffff;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Styling Input Form Modern */
 .form-control {
-    border: 1px solid #ddd;
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    border: 2px solid #f0f0f0;
+    background: #fafafa;
+    padding: 0 20px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
-/* Warna tombol login */
+.form-control:focus {
+    border-color: #FFA4A4;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255,164,164,0.15);
+    outline: none;
+}
+
+/* Styling Button Login Modern */
 .btn-login {
-    background-color: #FFA4A4;
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #FFA4A4, #FF8E8E);
     color: white;
     border: none;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255,164,164,0.3);
 }
 
-/* Warna tombol saat mouse diarahkan */
 .btn-login:hover {
-    background-color: #FFBEBE;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(255,164,164,0.4);
+    color: white;
 }
 
 /* Styling link Sign Up */
@@ -126,55 +193,57 @@ body {
 </style>
 </head>
 
-<!-- d-flex = layout flexbox -->
-<!-- vh-100 = tinggi body penuh 1 layar -->
-<body class="d-flex vh-100">
+<body class="login-container">
 
-<!-- Bar pink di sisi kiri -->
-<div class="left-bar"></div>
+<!-- Bagian kiri halaman berupa bar pink dengan efek gradien -->
+<div class="left-bar">
+    <div class="left-content">
+        <!-- Icon/Logo opsional -->
+        <div class="mb-4">
+            <i class="bi bi-bag-heart" style="font-size: 3rem; opacity: 0.9;"></i>
+        </div>
+        <h1 class="fw-bold display-5 mb-3">Welcome to BuyBuy!</h1>
+        <p class="fs-6 opacity-75 fw-light px-4">Discover products you love.<br> Secure login for customers.</p>
+    </div>
+</div>
 
-<!-- Konten utama login -->
-<!-- flex-fill = mengisi sisa ruang -->
-<!-- d-flex justify-content-center align-items-center = isi berada di tengah -->
-<div class="flex-fill d-flex justify-content-center align-items-center">
-    <div class="text-center">
+<!-- Bagian kanan untuk form login -->
+<div class="right-area">
+    <div class="login-box text-center">
 
         <!-- Judul halaman login -->
-        <h1 class="mb-4">
-            <span class="fw-semibold" style="color:#9CAFAA;">Sign In To </span>
-            <span class="fw-semibold fst-italic" style="color:#FFA4A4;">BuyBuy</span>
-        </h1>
+        <div class="mb-5 text-start">
+            <h2 class="fw-bold mb-1" style="color: #333;">Sign In to <span style="color:#FFA4A4;">BuyBuy</span></h2>
+            <p class="text-muted small">Please enter your email and password.</p>
+        </div>
 
-        <!-- Menampilkan pesan error jika login gagal -->
+        <!-- Jika ada pesan error, maka tampilkan -->
         <?php if ($error): ?>
-            <div class="text-danger mb-3"><?= $error ?></div>
+            <div class="alert alert-danger" style="border-radius: 12px; font-size: 14px;">
+                <?= $error ?>
+            </div>
         <?php endif; ?>
 
         <!-- Form login customer -->
-        <!-- method POST digunakan agar data form dikirim secara aman -->
-        <form method="POST" class="d-flex flex-column align-items-center gap-4">
+        <form method="POST">
 
-            <!-- Input email -->
             <input 
                 type="email" 
                 name="email" 
-                class="form-control px-4"
-                placeholder="Email"
+                class="form-control"
+                placeholder="Email Address"
                 required
             >
 
-            <!-- Input password -->
             <input 
                 type="password" 
                 name="password" 
-                class="form-control px-4"
+                class="form-control"
                 placeholder="Password"
                 required
             >
 
-            <!-- Tombol login -->
-            <!-- name="login" dipakai untuk mendeteksi submit -->
-            <button type="submit" name="login" class="btn btn-login">
+            <button type="submit" name="login" class="btn btn-login mt-3">
                 Sign In
             </button>
 

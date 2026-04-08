@@ -49,38 +49,111 @@ if (isset($_POST['register'])) {
 <link rel="icon" type="image/png" href="../assets/uploads/logo.png">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 body {
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
 }
 
-.right-bar {
-    width: 120px;
-    background-color: #FFA4A4;
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    background: #fff;
+    flex-direction: row-reverse; /* Flip the layout so grafic is on right */
 }
 
-.form-control,
-.btn-register {
-    width: 518px;
-    height: 86px;
-    border-radius: 40px;
-    font-size: 18px;
+/* Panel Grafik (Aslinya Kiri, sekarang Kanan) */
+.left-bar {
+    flex: 1;
+    background: linear-gradient(135deg, #FFA4A4 0%, #FF7E7E 100%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
 }
 
+@media (min-width: 992px) {
+    .left-bar { display: flex; }
+    .right-area { flex: 1.2; }
+}
+
+.left-content {
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+}
+
+.left-bar::after {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    top: -200px;
+    left: -200px; /* Flip this as well */
+}
+
+/* Panel Form */
+.right-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: #ffffff;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Styling Input Form Modern */
 .form-control {
-    border: 1px solid #ddd;
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    border: 2px solid #f0f0f0;
+    background: #fafafa;
+    padding: 0 20px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
+.form-control:focus {
+    border-color: #FFA4A4;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255,164,164,0.15);
+    outline: none;
+}
+
+/* Styling Button Login Modern */
 .btn-register {
-    background-color: #FFA4A4;
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #FFA4A4, #FF8E8E);
     color: white;
     border: none;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255,164,164,0.3);
 }
 
 .btn-register:hover {
-    background-color: #FFBEBE;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(255,164,164,0.4);
+    color: white;
 }
 
 .login-link {
@@ -95,35 +168,44 @@ body {
 </style>
 </head>
 
-<body class="d-flex vh-100">
+<body class="login-container">
 
-<div class="flex-fill d-flex justify-content-center align-items-center">
-    <div class="text-center">
+<div class="left-bar border-start">
+    <div class="left-content">
+        <div class="mb-4">
+            <i class="bi bi-person-plus" style="font-size: 3rem; opacity: 0.9;"></i>
+        </div>
+        <h1 class="fw-bold display-5 mb-3">Join Us Today!</h1>
+        <p class="fs-6 opacity-75 fw-light px-4">Create your BuyBuy account.<br> Start a new shopping journey.</p>
+    </div>
+</div>
 
-        <h1 class="mb-4 fw-semibold" style="color:#FFA4A4;">
-            Create Account
-        </h1>
+<div class="right-area">
+    <div class="login-box text-center">
+
+        <div class="mb-5 text-start">
+            <h2 class="fw-bold mb-1" style="color: #333;">Create <span style="color:#FFA4A4;">Account</span></h2>
+            <p class="text-muted small">Please fill out the form to register.</p>
+        </div>
 
         <?php if (isset($_GET['registered'])): ?>
-            <div class="text-success mb-3">
+            <div class="alert alert-success" style="border-radius: 12px; font-size: 14px;">
                 Register berhasil! Silakan login.
             </div>
         <?php endif; ?>
 
         <?php if ($error): ?>
-            <div class="text-danger mb-3"><?= $error ?></div>
+            <div class="alert alert-danger" style="border-radius: 12px; font-size: 14px;">
+                <?= $error ?>
+            </div>
         <?php endif; ?>
-
-        <!-- <?php if ($success): ?>
-            <div class="text-success mb-3"><?= $success ?></div>
-        <?php endif; ?> -->
             
-        <form method="POST" class="d-flex flex-column align-items-center gap-4">
+        <form method="POST">
 
             <input 
                 type="text" 
                 name="username" 
-                class="form-control px-4"
+                class="form-control"
                 placeholder="Username"
                 required
             >
@@ -131,20 +213,20 @@ body {
             <input 
                 type="email" 
                 name="email" 
-                class="form-control px-4"
-                placeholder="Email"
+                class="form-control"
+                placeholder="Email Address"
                 required
             >
 
             <input 
                 type="password" 
                 name="password" 
-                class="form-control px-4"
+                class="form-control"
                 placeholder="Password"
                 required
             >
 
-            <button type="submit" name="register" class="btn btn-register">
+            <button type="submit" name="register" class="btn btn-register mt-3">
                 Sign Up
             </button>
 
@@ -157,8 +239,6 @@ body {
 
     </div>
 </div>
-
-<div class="right-bar"></div>
 
 </body>
 </html>

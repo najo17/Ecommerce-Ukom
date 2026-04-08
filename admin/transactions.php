@@ -14,7 +14,7 @@ if ($_SESSION['role'] !== 'admin') {
 
 // Mengambil semua data transaksi dari tabel transactions
 $transactions = mysqli_query($conn, "
-    SELECT t.*, u.refund_name, u.refund_method, u.refund_number
+    SELECT t.*
     FROM transactions t
     LEFT JOIN users u ON t.customer_id = u.id
     ORDER BY t.id DESC
@@ -73,31 +73,130 @@ body {
     font-weight: 600;
 }
 
+/* Wrapper tabel modern */
+.card.shadow-sm {
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
 .table thead th {
-    background: #FFA4A4 !important;
-    color: white !important;
+    background: transparent !important;
+    color: #888 !important;
     text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px;
 }
 
 .table td {
-    text-align: center;
     vertical-align: middle;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px 10px;
+    text-align: center;
+    color: #555;
 }
 
-.btn-receipt {
-    background: #63C78A;
-    color: white;
+.table tbody tr {
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Action buttons */
+.action-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+.action-proof {
+    background-color: rgba(99, 199, 138, 0.15);
+    color: #409960;
+}
+.action-proof:hover {
+    background-color: #63C78A;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.action-receipt {
+    background-color: rgba(108, 92, 231, 0.15);
+    color: #6c5ce7;
+}
+.action-receipt:hover {
+    background-color: #6c5ce7;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* ========== MODAL STYLING ========== */
+.modal-content {
     border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
 }
 
-.btn-proof {
-    background: #63C78A;
-    color: white;
-    border: none;
+.modal-header {
+    background: #fff;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
 }
 
-.modal-content{
-    border-radius:20px;
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    background: #fdfdfd;
+    padding: 20px 25px;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.status-approved {
+    background-color: rgba(99, 199, 138, 0.15);
+    color: #409960;
+}
+
+.status-pending {
+    background-color: rgba(253, 203, 110, 0.2);
+    color: #e1b12c;
+}
+
+.status-cancelled {
+    background-color: rgba(235, 76, 76, 0.15);
+    color: #EB4C4C;
 }
 
 .receipt-box{
@@ -136,8 +235,11 @@ body {
 
 <h4 class="page-title mb-4">Transaction Management</h4>
 
-<table class="table table-bordered align-middle">
-<thead>
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
 <tr>
     <th>Customer</th>
     <th>Total</th>
@@ -145,7 +247,7 @@ body {
     <th>Courier</th>
     <th>Status</th>
     <th>Proof</th>
-    <th>Action</th>
+    <th>Details</th>
 </tr>
 </thead>
 
@@ -170,11 +272,11 @@ body {
 $status = strtolower($row['status']);
 
 if($status == 'approved'){
-    echo '<span class="badge bg-success">Approved</span>';
+    echo '<span class="status-badge status-approved">Approved</span>';
 } elseif($status == 'pending'){
-    echo '<span class="badge bg-warning text-dark">Pending</span>';
+    echo '<span class="status-badge status-pending">Pending</span>';
 } else {
-    echo '<span class="badge bg-danger">Cancelled</span>';
+    echo '<span class="status-badge status-cancelled">Cancelled</span>';
 }
 ?>
 </td>
@@ -182,12 +284,13 @@ if($status == 'approved'){
 <!-- PROOF BUTTON -->
 <td>
 <?php if($row['payment_method'] == 'transfer' && !empty($row['payment_proof'])): ?>
-    <button class="btn btn-proof btn-sm"
+    <div class="action-box action-proof"
         data-bs-toggle="modal"
         data-bs-target="#proofModal"
-        data-img="../assets/payment_proof/<?= htmlspecialchars($row['payment_proof']) ?>">
-        View
-    </button>
+        data-img="../assets/payment_proof/<?= htmlspecialchars($row['payment_proof']) ?>"
+        title="View Proof">
+        <i class="bi bi-image"></i>
+    </div>
 <?php else: ?>
     <span class="badge bg-secondary">No Proof (COD)</span>
 <?php endif; ?>
@@ -195,7 +298,7 @@ if($status == 'approved'){
 
 <!-- RECEIPT BUTTON -->
 <td>
-<button class="btn btn-receipt btn-sm"
+<div class="action-box action-receipt"
     data-bs-toggle="modal"
     data-bs-target="#receiptModal"
     data-id="<?= $row['id'] ?>"
@@ -209,17 +312,19 @@ if($status == 'approved'){
     data-proof="<?= htmlspecialchars($row['payment_proof']) ?>"
     data-courier="<?= htmlspecialchars($row['courier']) ?>"
     data-service="<?= htmlspecialchars($row['shipping_service']) ?>"
-    data-shipping="<?= htmlspecialchars($row['shipping_cost']) ?>">
-    Receipt
-</button>
+    data-shipping="<?= htmlspecialchars($row['shipping_cost']) ?>"
+    title="View Receipt">
+    <i class="bi bi-receipt"></i>
+</div>
 </td>
 
 </tr>
 <?php endwhile; ?>
 
-</tbody>
-</table>
-
+            </table>
+        </div>
+    </div>
+</div>
 </div>
 </div>
 
@@ -229,9 +334,9 @@ if($status == 'approved'){
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
 
-<div class="modal-header bg-success text-white">
-    <h5 class="modal-title">Proof of Payment</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal-header">
+    <h5 class="modal-title text-success">Proof of Payment</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
 <div class="modal-body text-center">
@@ -248,12 +353,12 @@ if($status == 'approved'){
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content shadow-lg border-0">
 
-<div class="modal-header gradient-header text-white">
-    <h5 class="modal-title fw-semibold">
+<div class="modal-header">
+    <h5 class="modal-title" style="color: #FFA4A4;">
         <i class="bi bi-receipt-cutoff me-2"></i>
         Transaction Receipt
     </h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
 <div class="modal-body p-4">
@@ -283,14 +388,7 @@ if($status == 'approved'){
     <div id="r-address" class="small text-muted mt-1"></div>
 </div>
 
-    <div class="mb-3 mt-2">
-        <span class="fw-semibold">Refund Account</span>
-        <div class="small text-muted mt-1">
-            <?= !empty($row['refund_method']) ? $row['refund_method'] : '-' ?> <br>
-            <?= !empty($row['refund_number']) ? $row['refund_number'] : '-' ?> <br>
-            <?= !empty($row['refund_name']) ? $row['refund_name'] : '-' ?>
-        </div>
-    </div>
+
 
 <hr>
 
@@ -410,11 +508,11 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
     let badge = '';
 
     if(status === 'approved'){
-        badge = '<span class="badge bg-success">Approved</span>';
+        badge = '<span class="status-badge status-approved">Approved</span>';
     } else if(status === 'pending'){
-        badge = '<span class="badge bg-warning text-dark">Pending</span>';
+        badge = '<span class="status-badge status-pending">Pending</span>';
     } else {
-        badge = '<span class="badge bg-danger">Cancelled</span>';
+        badge = '<span class="status-badge status-cancelled">Cancelled</span>';
     }
 
     document.getElementById('r-status').innerHTML = badge;

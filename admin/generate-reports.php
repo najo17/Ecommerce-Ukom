@@ -100,37 +100,122 @@ body {
 }
 
 /* Styling header tabel */
+.table {
+    margin-bottom: 0;
+}
+
 .table thead th {
-    background: #FFA4A4 !important;
-    color: white !important;
+    background: transparent !important;
+    color: #888 !important;
     text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px;
 }
 
 /* Styling isi tabel */
 .table td {
-    text-align: center;
     vertical-align: middle;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px 10px;
+    text-align: center;
+    color: #555;
+}
+
+.table tbody tr {
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fcfcfc;
 }
 
 /* Styling kotak action */
 .action-box {
-    width: 43px;
-    height: 43px;
-    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
 }
 
 /* Warna action view */
-.action-view { background-color: #63C78A; }
+.action-view {
+    background-color: rgba(99, 199, 138, 0.15);
+    color: #409960;
+}
+.action-view:hover {
+    background-color: #63C78A;
+    color: #fff;
+    transform: scale(1.05);
+}
 
 /* Garis putus-putus seperti struk */
 .receipt-line {
     border-bottom: 1px dashed #ccc;
     margin: 8px 0;
+}
+
+/* ========== MODAL STYLING ========== */
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #fff;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    background: #fdfdfd;
+    padding: 20px 25px;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.status-approved {
+    background-color: rgba(99, 199, 138, 0.15);
+    color: #409960;
+}
+
+.status-pending {
+    background-color: rgba(253, 203, 110, 0.2);
+    color: #e1b12c;
+}
+
+.status-cancelled {
+    background-color: rgba(235, 76, 76, 0.15);
+    color: #EB4C4C;
 }
 </style>
 </head>
@@ -166,12 +251,13 @@ body {
 </ul>
 
 <!-- Isi tab -->
+<div class="card border-0 shadow-sm p-4" style="border-radius: 16px; background: #fff;">
 <div class="tab-content">
 
 <!-- ================= STOCK ================= -->
 <!-- Tab untuk menampilkan data stok -->
 <div class="tab-pane fade show active" id="stock">
-<table class="table table-bordered">
+<table class="table align-middle">
 <thead>
 <tr>
 <th>ID</th>
@@ -210,7 +296,7 @@ body {
 <!-- ================= SALES ================= -->
 <!-- Tab untuk menampilkan data penjualan -->
 <div class="tab-pane fade" id="sales">
-<table class="table table-bordered">
+<table class="table align-middle">
 <thead>
 <tr>
 <th>ID</th>
@@ -249,7 +335,7 @@ body {
 <!-- ================= TRANSACTION ================= -->
 <!-- Tab untuk menampilkan data transaksi -->
 <div class="tab-pane fade" id="transaction">
-<table class="table table-bordered">
+<table class="table align-middle">
 <thead>
 <tr>
 <th>ID</th>
@@ -258,7 +344,7 @@ body {
 <th>Total</th>
 <th>Payment</th>
 <th>Status</th>
-<th>Action</th>
+<th>Details</th>
 </tr>
 </thead>
 <tbody>
@@ -288,15 +374,15 @@ $status = strtolower($row['status']);
 
 // Jika status approved, tampilkan badge hijau
 if($status == 'approved'){
-    echo '<span class="badge bg-success">Approved</span>';
+    echo '<span class="status-badge status-approved">Approved</span>';
 
 // Jika status pending, tampilkan badge kuning
 } elseif($status == 'pending'){
-    echo '<span class="badge bg-warning text-dark">Pending</span>';
+    echo '<span class="status-badge status-pending">Pending</span>';
 
 // Selain itu tampilkan badge merah (cancelled)
 } else {
-    echo '<span class="badge bg-danger">Cancelled</span>';
+    echo '<span class="status-badge status-cancelled">Cancelled</span>';
 }
 ?>
 </td>
@@ -326,6 +412,7 @@ data-date="<?= $row['created_at'] ?>">
 </div>
 </div>
 </div>
+</div>
 
 <!-- ================= TRANSACTION MODAL (NEW STYLE) ================= -->
 <!-- Modal untuk menampilkan detail / receipt transaksi -->
@@ -335,14 +422,13 @@ data-date="<?= $row['created_at'] ?>">
 
 <!-- HEADER -->
 <!-- Bagian header modal -->
-<div class="modal-header text-white"
-     style="background:linear-gradient(135deg,#FFA4A4,#FF7E7E);">
-<h5 class="modal-title fw-semibold">
+<div class="modal-header">
+<h5 class="modal-title" style="color:#FFA4A4;">
 <i class="bi bi-receipt-cutoff me-2"></i>Transaction Receipt
 </h5>
 
 <!-- Tombol close modal -->
-<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
 <!-- BODY -->
@@ -471,15 +557,15 @@ var button = event.relatedTarget;
 
     // Jika status approved, buat badge hijau
     if(status === 'approved'){
-        badge = '<span class="badge bg-success px-3 py-1">Approved</span>';
+        badge = '<span class="status-badge status-approved">Approved</span>';
 
     // Jika status pending, buat badge kuning
     } else if(status === 'pending'){
-        badge = '<span class="badge bg-warning text-dark px-3 py-1">Pending</span>';
+        badge = '<span class="status-badge status-pending">Pending</span>';
 
     // Selain itu, buat badge merah
     } else {
-        badge = '<span class="badge bg-danger px-3 py-1">Cancelled</span>';
+        badge = '<span class="status-badge status-cancelled">Cancelled</span>';
     }
 
     // Menampilkan badge status ke modal

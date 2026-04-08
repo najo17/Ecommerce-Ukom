@@ -51,6 +51,9 @@ $total_transaksi = mysqli_fetch_assoc($transaksi)['total'];
         <!-- Bootstrap -->
         <!-- Menghubungkan Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
         <!-- Font -->
         <!-- Menghubungkan font Poppins dari Google Fonts -->
@@ -91,8 +94,14 @@ $total_transaksi = mysqli_fetch_assoc($transaksi)['total'];
                 background: #fff;
                 border-radius: 20px;
                 padding: 30px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
                 border: none;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             }
 
             /* Styling judul kecil pada card */
@@ -100,7 +109,7 @@ $total_transaksi = mysqli_fetch_assoc($transaksi)['total'];
                 font-size: 16px;
                 font-weight: 500;
                 color: #888;
-                margin-bottom: 15px;
+                margin-bottom: 0;
             }
 
             /* Styling angka statistik pada card */
@@ -132,24 +141,30 @@ $total_transaksi = mysqli_fetch_assoc($transaksi)['total'];
 
                 <!-- Card total produk -->
                 <div class="stat-card">
-                    <h3>Total Products</h3>
-
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Total Products</h3>
+                        <i class="bi bi-box-seam fs-3" style="color: #FFA4A4; opacity: 0.8;"></i>
+                    </div>
                     <!-- Menampilkan jumlah total produk -->
                     <p><?= $total_produk ?></p>
                 </div>
 
                 <!-- Card total officer -->
                 <div class="stat-card">
-                    <h3>Total Officers</h3>
-
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Total Officers</h3>
+                        <i class="bi bi-person-badge fs-3" style="color: #FFA4A4; opacity: 0.8;"></i>
+                    </div>
                     <!-- Menampilkan jumlah total officer -->
                     <p><?= $total_officer ?></p>
                 </div>
 
                 <!-- Card total transaksi -->
                 <div class="stat-card">
-                    <h3>Total Transactions</h3>
-
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Total Transactions</h3>
+                        <i class="bi bi-cart-check fs-3" style="color: #FFA4A4; opacity: 0.8;"></i>
+                    </div>
                     <!-- Menampilkan jumlah total transaksi -->
                     <p><?= $total_transaksi ?></p>
                 </div>

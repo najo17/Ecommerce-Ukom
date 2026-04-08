@@ -250,10 +250,43 @@ body {
     gap: 10px;
 }
 
+/* Wrapper tabel modern */
+.card.shadow-sm {
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
 .table thead th {
-    background: #FFA4A4 !important;
-    color: white !important;
+    background: transparent !important;
+    color: #888 !important;
     text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px;
+}
+
+.table td {
+    vertical-align: middle;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px 10px;
+    text-align: center;
+    color: #555;
+}
+
+.table tbody tr {
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fcfcfc;
 }
 
 .btn-pink {
@@ -267,32 +300,73 @@ body {
     color: white;
 }
 
-.btn-download {
-    background-color: #61C38D;
-    border: none;
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 6px;
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
     text-decoration: none;
+    border: none;
+    transition: all 0.2s ease;
 }
 
+.btn-download {
+    background-color: rgba(97, 195, 141, 0.15);
+    color: #3b8e5c;
+}
 .btn-download:hover {
-    color: white;
-    opacity: 0.9;
+    background-color: #61C38D;
+    color: #fff;
+    transform: scale(1.02);
 }
 
 .btn-delete {
+    background-color: rgba(229, 75, 75, 0.15);
+    color: #c43838;
+}
+.btn-delete:hover {
     background-color: #E54B4B;
-    border: none;
     color: #fff;
-    padding: 6px 16px;
-    border-radius: 6px;
+    transform: scale(1.02);
 }
 
 .action-buttons {
     display: flex;
     justify-content: center;
     gap: 10px;
+}
+
+/* ========== MODAL STYLING ========== */
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #fff;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    background: #fdfdfd;
+    padding: 20px 25px;
 }
 </style>
 </head>
@@ -332,13 +406,16 @@ body {
             </button>
         </form>
 
-        <table class="table table-bordered bg-white">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table align-middle">
             <thead>
                 <tr>
                     <th>Backup File</th>
                     <th>Date</th>
                     <th>Size</th>
-                    <th>Actions</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -369,16 +446,16 @@ if (!empty($files)) :
 
     <td>
         <div class="action-buttons">
-            <a href="download.php?file=<?= urlencode($filename) ?>" class="btn-download">
-                <i class="bi bi-download me-1"></i> Download
+            <a href="download.php?file=<?= urlencode($filename) ?>" class="btn-action btn-download">
+                <i class="bi bi-download"></i> Download
             </a>
 
             <button 
-                class="btn-delete"
+                class="btn-action btn-delete"
                 data-bs-toggle="modal"
                 data-bs-target="#deleteBackupModal"
                 data-file="<?= htmlspecialchars($filename) ?>">
-                <i class="bi bi-trash me-1"></i> Delete
+                <i class="bi bi-trash"></i> Delete
             </button>
         </div>
     </td>
@@ -395,8 +472,11 @@ else:
 
 <?php endif; ?>
 
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
 
         <hr class="my-5">
 
@@ -426,11 +506,11 @@ else:
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content rounded-4 overflow-hidden">
 
-      <div class="modal-header border-0" style="background:#E54B4B;">
-        <h5 class="modal-title text-white fw-semibold">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger fw-semibold">
           Delete Backup File
         </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body text-center py-5">

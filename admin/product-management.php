@@ -184,53 +184,75 @@ body {
 
 /* Table */
 .table {
-    background: white;
     margin-bottom: 0;
 }
 
 .table thead th {
-    background: #FFA4A4 !important;
-    color: white !important;
+    background: transparent !important;
+    color: #888 !important;
     text-align: center;
     vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px;
     white-space: nowrap;
 }
 
 .table td {
     vertical-align: middle;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px 10px;
+    color: #555;
+}
+
+.table tbody tr {
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fcfcfc;
 }
 
 /* Action buttons */
 .action-box {
-    width: 43px;
-    height: 43px;
-    border-radius: 8px;
-    display: flex;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
+    font-size: 16px;
 }
 
+/* edit */
 .action-edit {
-    background: #63C78A;
+    background-color: rgba(99, 199, 138, 0.15);
+    color: #409960;
 }
-
-.action-delete {
-    background: #EB4C4C;
-}
-
 .action-edit:hover {
-    background: #52b477;
+    background-color: #63C78A;
+    color: #fff;
+    transform: scale(1.05);
 }
 
+/* delete */
+.action-delete {
+    background-color: rgba(235, 76, 76, 0.15);
+    color: #EB4C4C;
+}
 .action-delete:hover {
-    background: #d63d3d;
+    background-color: #EB4C4C;
+    color: #fff;
+    transform: scale(1.05);
 }
 
 .action-box i {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 /* Product image */
@@ -241,9 +263,52 @@ body {
     border-radius: 8px;
 }
 
-/* Modal */
+/* ========== MODAL STYLING ========== */
 .modal-content {
+    border: none;
     border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #fff;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    background: #fdfdfd;
+    padding: 20px 25px;
+}
+
+/* Styling input form modern */
+.form-control {
+    border-radius: 12px;
+    padding: 12px 15px;
+    border: 1px solid #e1e1e1;
+    background-color: #fafafa;
+    font-size: 14px;
+    color: #444;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #FFA4A4;
+    box-shadow: 0 0 0 4px rgba(255, 164, 164, 0.15);
+    outline: none;
 }
 
 /* Table responsive */
@@ -271,10 +336,10 @@ body {
         </button>
 
         <!-- Product Table -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
+        <div class="card border-0 shadow-sm" style="border-radius: 16px;">
+            <div class="card-body p-4">
                 <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
+                    <table class="table align-middle">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -284,7 +349,7 @@ body {
                                 <th>Stock</th>
                                 <th>Description</th>
                                 <th>Picture</th>
-                                <th>Actions</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
 
@@ -347,9 +412,9 @@ body {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <div class="modal-header" style="background:#FFA4A4;color:white;">
+            <div class="modal-header">
                 <h5 class="modal-title">Add Product</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <form method="POST" enctype="multipart/form-data">
@@ -393,9 +458,9 @@ body {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <div class="modal-header" style="background:#FFA4A4;color:white;">
+            <div class="modal-header">
                 <h5 class="modal-title">Edit Product</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <form method="POST" enctype="multipart/form-data">
@@ -442,11 +507,11 @@ body {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 overflow-hidden">
 
-            <div class="modal-header border-0" style="background:#DC3545;">
-                <h5 class="modal-title text-white fw-semibold">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger fw-semibold">
                     Delete Product
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body text-center py-5">

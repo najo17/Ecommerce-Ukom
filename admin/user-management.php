@@ -147,29 +147,93 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
             background: #ff8e8e;
         }
 
-        /* Membuat sudut tabel membulat */
+        /* Wrapper tabel modern */
+        .table-wrapper {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        
         .table {
-            border-radius: 12px;
-            overflow: hidden;
+            margin-bottom: 0;
         }
 
         /* Header tabel */
         .table thead th {
-            background-color: #FFA4A4 !important;
-            color: #ffffff !important;
+            background: transparent !important;
+            color: #888 !important;
             text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #eee !important;
+            padding-bottom: 15px;
+        }
+
+        .table td {
+            border-bottom: 1px solid #f8f8f8;
+            padding: 15px 10px;
+            color: #555;
             vertical-align: middle;
         }
 
-        /* Header modal */
-        .modal-header {
-            background: #FFA4A4;
-            color: white;
+        .table tbody tr {
+            transition: background 0.2s;
         }
 
-        /* Styling input form */
+        .table tbody tr:hover {
+            background-color: #fcfcfc;
+        }
+
+        /* ========== MODAL STYLING ========== */
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #fff;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 25px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            border-top: none;
+            background: #fdfdfd;
+            padding: 20px 25px;
+        }
+
+        /* Styling input form modern */
         .form-control {
             border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid #e1e1e1;
+            background-color: #fafafa;
+            font-size: 14px;
+            color: #444;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            background-color: #fff;
+            border-color: #FFA4A4;
+            box-shadow: 0 0 0 4px rgba(255, 164, 164, 0.15);
+            outline: none;
         }
 
         /* Tombol action kecil */
@@ -181,29 +245,42 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
 
         /* Box tombol action */
         .action-box {
-            width: 43px;
-            height: 43px;
-            border-radius: 8px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
             cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
         }
 
-        /* Tombol edit warna hijau */
+        /* Tombol edit warna hijau elegan */
         .action-edit {
+            background-color: rgba(99, 199, 138, 0.15);
+            color: #409960;
+        }
+        .action-edit:hover {
             background-color: #63C78A;
+            color: #fff;
+            transform: scale(1.05);
         }
 
-        /* Tombol delete warna merah */
+        /* Tombol delete warna merah elegan */
         .action-delete {
+            background-color: rgba(235, 76, 76, 0.15);
+            color: #EB4C4C;
+        }
+        .action-delete:hover {
             background-color: #EB4C4C;
+            color: #fff;
+            transform: scale(1.05);
         }
 
         /* Ukuran icon di action box */
         .action-box i {
-            font-size: 22px;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -226,8 +303,8 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
 
         <!-- TABLE -->
         <!-- Tabel daftar officer -->
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+        <div class="table-wrapper table-responsive">
+            <table class="table align-middle">
                 <thead>
                     <tr class="text-center">
                         <th>ID</th>
@@ -235,7 +312,7 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
                         <th>Email</th>
                         <th>Password</th>
                         <th>Date</th>
-                        <th>Action</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -302,7 +379,7 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
             <!-- Header modal tambah officer -->
             <div class="modal-header">
                 <h5 class="modal-title">Add Officer</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Form tambah officer -->
@@ -348,7 +425,7 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
             <!-- Header modal edit officer -->
             <div class="modal-header">
                 <h5 class="modal-title">Edit Officer</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Form edit officer -->
@@ -396,9 +473,9 @@ $users = mysqli_query($conn, "SELECT * FROM users WHERE role='officer'");
         <div class="modal-content">
 
             <!-- Header modal delete -->
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Delete Officer</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Delete Officer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Form delete officer -->
