@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Apr 2026 pada 05.08
+-- Waktu pembuatan: 08 Apr 2026 pada 02.11
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -68,7 +68,7 @@ INSERT INTO `products` (`id`, `name`, `description`, `category`, `price`, `stock
 (13, 'Denim Cargo Jeans', 'Crafted from cotton denim, these pull-on jeans are designed with a barrel-leg shape. Baggy at the leg and tapered at the ankle, they\'re made for easy movement and comfort.', 'Boy', 149000.00, 100, 'denim-cargo-jeans.webp', '2026-04-05 12:08:53'),
 (14, 'Black Butterfly T-Shirt', 'A go-to top thats as easy as it is eye-catching. With its relaxed, boxy fit and a flutter of delicate butterflies, its made from cool cotton, perfect for dressing up or keeping it casual.', 'Girl', 99000.00, 100, 'black-butterfly-tshirt.webp', '2026-04-05 12:09:47'),
 (15, 'Pink Cat T-Shirt', 'Bright and fun, this comfy cotton tee is made for feline fans.', 'Girl', 89000.00, 99, 'pink-cat-tshirt.webp', '2026-04-05 12:10:19'),
-(16, 'Floral Woven Skirt', 'Filled with flowers, this tiered A-line skirt is ready to twirl into today\'s adventures. A fully elasticated waistband and cotton lining ensures all-day comfort.', 'Girl', 109000.00, 100, 'floral-woven-skirt.webp', '2026-04-05 12:11:00'),
+(16, 'Floral Woven Skirt', 'Filled with flowers, this tiered A-line skirt is ready to twirl into today\'s adventures. A fully elasticated waistband and cotton lining ensures all-day comfort.', 'Girl', 109000.00, 98, 'floral-woven-skirt.webp', '2026-04-05 12:11:00'),
 (17, '2 Pack Ribbed Leggings', 'Two pairs of full-length leggings to mix, match and layer. Each pair features a wide, elasticated waistband for comfort and easy dressing.', 'Girl', 89000.00, 100, '2-pack-ribbed-leggings.webp', '2026-04-05 12:11:36');
 
 -- --------------------------------------------------------
@@ -93,7 +93,8 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`id`, `transaction_id`, `product_id`, `product_name`, `price`, `quantity`, `subtotal`, `created_at`) VALUES
-(16, 16, 15, 'Pink Cat T-Shirt', 0, 1, 89000, '2026-04-05 12:16:43');
+(16, 16, 15, 'Pink Cat T-Shirt', 0, 1, 89000, '2026-04-05 12:16:43'),
+(17, 17, 16, 'Floral Woven Skirt', 0, 2, 218000, '2026-04-07 00:07:45');
 
 -- --------------------------------------------------------
 
@@ -118,7 +119,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `customer_id`, `customer_name`, `total`, `payment_method`, `shipping_address`, `status`, `created_at`, `payment_proof`) VALUES
-(16, 8, 'aufa', 89000, 'transfer', NULL, 'cancelled', '2026-04-05 12:16:43', '1775391403_denim-shorts.webp');
+(16, 8, 'aufa', 89000, 'transfer', NULL, 'cancelled', '2026-04-05 12:16:43', '1775391403_denim-shorts.webp'),
+(17, 8, 'aufa', 218000, 'transfer', 'JL. depok', 'approved', '2026-04-07 00:07:45', '1775520465_logo.png');
 
 -- --------------------------------------------------------
 
@@ -146,7 +148,8 @@ INSERT INTO `users` (`id`, `username`, `full_name`, `address`, `email`, `passwor
 (1, 'admin', NULL, NULL, NULL, '0192023a7bbd73250516f069df18b500', NULL, '2026-02-21 15:01:20', 'admin'),
 (5, 'najo', NULL, NULL, 'n@gmail.com', '202cb962ac59075b964b07152d234b70', '123', '2026-02-21 15:28:55', 'officer'),
 (8, 'aufa', 'aufa', 'JL. depok', 'aufa@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, '2026-02-21 16:14:53', 'customer'),
-(9, 'rehan', NULL, NULL, 'r@gmail.com', '698d51a19d8a121ce581499d7b701668', NULL, '2026-02-21 16:19:06', 'customer');
+(9, 'rehan', NULL, NULL, 'r@gmail.com', '698d51a19d8a121ce581499d7b701668', NULL, '2026-02-21 16:19:06', 'customer'),
+(11, 'cust', NULL, NULL, 'cust123@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, '2026-04-07 02:49:38', 'customer');
 
 --
 -- Indexes for dumped tables
@@ -203,19 +206,19 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT untuk tabel `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
