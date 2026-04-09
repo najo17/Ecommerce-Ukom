@@ -20,22 +20,25 @@ if(isset($_POST['update_profile'])){
 
     // Ambil dan amankan input
     $full_name = mysqli_real_escape_string($conn, trim($_POST['full_name']));
+    $phone = mysqli_real_escape_string($conn, trim($_POST['phone']));
     $address = mysqli_real_escape_string($conn, trim($_POST['address']));
 
     // Query update data user
     $update = mysqli_query($conn, "UPDATE users SET 
         full_name='$full_name',
+        phone='$phone',
         address='$address'
         WHERE id='$user_id'
     ");
 
     // Jika berhasil update
     if($update){
-        echo "<script>alert('Profile updated successfully!'); window.location='index.php';</script>";
+        $_SESSION['notif'] = ['type' => 'success', 'message' => 'Profile updated successfully!'];
+        header('Location: profile.php');
         exit();
     } else {
         // Jika gagal
-        echo "<script>alert('Failed to update profile!');</script>";
+        $_SESSION['notif'] = ['type' => 'error', 'message' => 'Failed to update profile!'];
     }
 }
 ?>
@@ -276,7 +279,7 @@ body{
 
         <div class="profile-heading">
             <h2>My Profile</h2>
-            <p>Manage your personal information and shipping address.</p>
+            <p>Manage your personal information, phone number and shipping address.</p>
         </div>
     </div>
 
@@ -293,7 +296,7 @@ body{
 
                 <!-- Note -->
                 <div class="profile-note">
-                    Please make sure your <strong>full name</strong> and <strong>address</strong> are correct before checkout.
+                    Please make sure your <strong>full name</strong>, <strong>phone number</strong> and <strong>address</strong> are correct before checkout.
                 </div>
 
                 <!-- FORM UPDATE PROFILE -->
@@ -309,6 +312,12 @@ body{
                     <div class="mb-3">
                         <label class="form-label">Full Name</label>
                         <input type="text" name="full_name" class="form-control" value="<?= htmlspecialchars($user['full_name'] ?? ''); ?>" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="e.g. 08123456789" required>
                     </div>
 
                     <!-- Address -->
@@ -335,5 +344,6 @@ body{
     </div>
 </div>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

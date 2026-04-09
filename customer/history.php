@@ -581,7 +581,8 @@ $transactions = mysqli_query($conn, "
                                 data-products="<?= htmlspecialchars($row['products']) ?>"
                                 data-courier="<?= htmlspecialchars($row['courier'] ?? '') ?>"
                                 data-service="<?= htmlspecialchars($row['shipping_service'] ?? '') ?>"
-                                data-shipping="<?= htmlspecialchars($row['shipping_cost'] ?? 0) ?>">
+                                data-shipping="<?= htmlspecialchars($row['shipping_cost'] ?? 0) ?>"
+                                data-phone="<?= htmlspecialchars($row['shipping_phone'] ?? '') ?>">
 
                                 <i class="bi bi-eye"></i>
                             </button>
@@ -629,6 +630,12 @@ $transactions = mysqli_query($conn, "
 
                     <div class="receipt-row">
                         <span>Date</span><span id="r-date"></span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3 mt-2">
+                        <span class="fw-semibold">Phone</span>
+                        <div id="r-phone" class="small text-muted mt-2"></div>
                     </div>
 
                     <!-- Alamat -->
@@ -742,6 +749,10 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
     document.getElementById('r-date').innerText =
         rawDate ? new Date(rawDate).toLocaleDateString('id-ID') : '-';
 
+    // Phone
+    document.getElementById('r-phone').innerText =
+        button.getAttribute('data-phone') || '-';
+
     // Address
     document.getElementById('r-address').innerText =
         button.getAttribute('data-address') || '-';
@@ -831,5 +842,6 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
 });
 </script>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

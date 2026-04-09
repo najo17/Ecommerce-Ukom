@@ -10,6 +10,7 @@ if(!isset($_SESSION['user_id'])){
 $customer_id = $_SESSION['user_id'];
 $payment_method = mysqli_real_escape_string($conn, $_POST['payment_method'] ?? '');
 $address = mysqli_real_escape_string($conn, trim($_POST['address'] ?? ''));
+$phone = mysqli_real_escape_string($conn, trim($_POST['phone'] ?? ''));
 $courier = mysqli_real_escape_string($conn, trim($_POST['courier'] ?? ''));
 $shipping_service = mysqli_real_escape_string($conn, trim($_POST['shipping_service'] ?? ''));
 $shipping_cost = (int)($_POST['shipping_cost'] ?? 0);
@@ -28,14 +29,21 @@ if(empty($cart)){
 
 /* ================= VALIDASI ADDRESS ================= */
 if(empty($address)){
-    $_SESSION['error'] = "Please fill your address first!";
+    $_SESSION['notif'] = ['type' => 'error', 'message' => 'Please fill your address first!'];
+    header("Location: ../customer/profile.php");
+    exit();
+}
+
+/* ================= VALIDASI PHONE ================= */
+if(empty($phone)){
+    $_SESSION['notif'] = ['type' => 'error', 'message' => 'Please fill your phone number first!'];
     header("Location: ../customer/profile.php");
     exit();
 }
 
 /* ================= VALIDASI KURIR ================= */
 if(empty($courier) || empty($shipping_service)){
-    $_SESSION['error'] = "Please select courier and shipping service!";
+    $_SESSION['notif'] = ['type' => 'error', 'message' => 'Please select courier and shipping service!'];
     header("Location: ../customer/checkout.php");
     exit();
 }
@@ -70,7 +78,7 @@ $shipping_cost = $valid_shipping_cost;
 /* ================= VALIDASI PAYMENT PROOF ================= */
 if($payment_method === 'transfer'){
     if(!isset($_FILES['payment_proof']) || $_FILES['payment_proof']['error'] !== 0){
-        $_SESSION['error'] = "Please upload payment proof for transfer!";
+        $_SESSION['notif'] = ['type' => 'error', 'message' => 'Please upload payment proof for transfer!'];
         header("Location: ../customer/checkout.php");
         exit();
     }
@@ -86,7 +94,7 @@ foreach($cart as $id => $qty){
     $product = mysqli_fetch_assoc($query);
 
     if(!$product || $qty > $product['stock']){
-        $_SESSION['error'] = "Stock not enough!";
+        $_SESSION['notif'] = ['type' => 'error', 'message' => 'Stock not enough!'];
         header("Location: ../customer/cart.php");
         exit();
     }
@@ -128,6 +136,7 @@ try {
         shipping_cost,
         status, 
         shipping_address, 
+        shipping_phone,
         created_at
     )
     VALUES
@@ -141,6 +150,7 @@ try {
         '$shipping_cost',
         '$status',
         '$address',
+        '$phone',
         NOW()
     )
     ");
@@ -194,7 +204,7 @@ try {
 } catch (Exception $e) {
 
     mysqli_rollback($conn);
-    $_SESSION['error'] = "Transaction failed!";
+    $_SESSION['notif'] = ['type' => 'error', 'message' => 'Transaction failed!'];
     header("Location: ../customer/cart.php");
     exit();
 }
@@ -202,7 +212,7 @@ try {
 /* ================= KOSONGKAN CART ================= */
 unset($_SESSION['cart']);
 
-$_SESSION['success'] = "Order successful!";
+$_SESSION['notif'] = ['type' => 'success', 'message' => 'Order placed successfully! 🎉'];
 header("Location: ../customer/history.php");
 exit();
 ?>

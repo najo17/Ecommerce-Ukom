@@ -568,36 +568,6 @@ body{
     </div>
 </section>
 
-<!-- TOAST SUCCESS -->
-<?php if(isset($_SESSION['success'])): ?>
-<div class="toast-container position-fixed top-0 end-0 p-4">
-    <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="bi bi-check-circle me-2"></i>
-                <?= $_SESSION['success']; ?>
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
-<?php unset($_SESSION['success']); endif; ?>
-
-<!-- TOAST ERROR -->
-<?php if(isset($_SESSION['error'])): ?>
-<div class="toast-container position-fixed top-0 end-0 p-4">
-    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert">
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="bi bi-exclamation-circle me-2"></i>
-                <?= $_SESSION['error']; ?>
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
-<?php unset($_SESSION['error']); endif; ?>
-
 <!-- FOOTER -->
 <footer class="footer">
     <div class="container text-center">
@@ -610,20 +580,17 @@ body{
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var successToast = document.getElementById('cartToast');
-    if(successToast){
-        var toast = new bootstrap.Toast(successToast, { delay: 2000 });
-        toast.show();
-    }
-
-    var errorToast = document.getElementById('errorToast');
-    if(errorToast){
-        var toast2 = new bootstrap.Toast(errorToast, { delay: 2000 });
-        toast2.show();
-    }
-});
-</script>
+<?php
+// Convert legacy session keys to new notif format
+if(isset($_SESSION['success']) && !isset($_SESSION['notif'])){
+    $_SESSION['notif'] = ['type' => 'success', 'message' => $_SESSION['success']];
+    unset($_SESSION['success']);
+}
+if(isset($_SESSION['error']) && !isset($_SESSION['notif'])){
+    $_SESSION['notif'] = ['type' => 'error', 'message' => $_SESSION['error']];
+    unset($_SESSION['error']);
+}
+?>
+<?php include 'notif.php'; ?>
 </body>
 </html>

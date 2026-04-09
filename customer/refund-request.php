@@ -45,7 +45,7 @@ if(isset($_POST['submit_refund'])){
     $refund_amount  = (int) $_POST['refund_amount'];
 
     if(empty($reason) || empty($bank_name) || empty($account_number) || empty($account_holder) || $refund_amount <= 0){
-        $error = "All fields must be filled correctly.";
+        $_SESSION['notif'] = ['type' => 'error', 'message' => 'All fields must be filled correctly.'];
     } else {
 
         // Cek apakah request refund sudah pernah dibuat
@@ -55,7 +55,7 @@ if(isset($_POST['submit_refund'])){
         ");
 
         if(mysqli_num_rows($check) > 0){
-            $error = "Refund request has already been submitted.";
+            $_SESSION['notif'] = ['type' => 'error', 'message' => 'Refund request has already been submitted.'];
         } else {
             // Simpan request refund
             mysqli_query($conn, "
@@ -145,9 +145,7 @@ if(isset($_POST['submit_refund'])){
             <strong>Status:</strong> <?= ucfirst($data['status']) ?>
         </div>
 
-        <?php if(isset($error)): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
-        <?php endif; ?>
+
 
         <form method="POST">
             <div class="mb-3">
@@ -185,5 +183,6 @@ if(isset($_POST['submit_refund'])){
     </div>
 </div>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

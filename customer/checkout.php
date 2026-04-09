@@ -621,6 +621,35 @@ a{
                     <em>Transfer Here : 087864200621 ( Via Dana )</em>
                 </div>
 
+                <!-- PHONE NUMBER -->
+                <div class="mb-4">
+                    <label class="form-label">Phone Number</label>
+                    <div class="address-box">
+
+                        <!-- Jika nomor telepon ada -->
+                        <?php if(!empty($user['phone'])): ?>
+
+                            <i class="bi bi-telephone-fill me-2" style="color:var(--primary-dark)"></i>
+                            <strong><?= htmlspecialchars($user['phone']); ?></strong>
+
+                        <?php else: ?>
+
+                            <!-- Jika belum isi nomor telepon -->
+                            <span class="text-danger">Fill Phone Number First</span>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                    <!-- Link edit phone -->
+                    <a href="profile.php" class="edit-address-link">
+                        <i class="bi bi-pencil-square"></i> Edit Phone
+                    </a>
+                </div>
+
+                <!-- Hidden phone untuk dikirim ke server -->
+                <input type="hidden" name="phone" value="<?= htmlspecialchars($user['phone'] ?? ''); ?>">
+
                 <!-- ADDRESS -->
                 <div class="mb-4">
                     <label class="form-label">Shipping Address</label>
@@ -708,10 +737,10 @@ a{
                     <input type="hidden" name="shipping_cost" id="shippingCostInput" value="0">
 
                     <!-- Jika alamat kosong -->
-                    <?php if(empty($user['address'])): ?>
+                    <?php if(empty($user['address']) || empty($user['phone'])): ?>
 
                         <a href="profile.php" class="order-btn-outline mt-3">
-                            Fill Address First
+                            Fill Profile First
                         </a>
 
                     <?php else: ?>
@@ -755,6 +784,11 @@ a{
                 <p><strong>Courier:</strong> <span id="modalCourier">-</span></p>
                 <p><strong>Service:</strong> <span id="modalService">-</span></p>
                 <p><strong>Shipping Cost:</strong> <span id="modalShippingCost">Rp 0</span></p>
+
+                <!-- Tampilkan nomor telepon -->
+                <p><strong>Phone:</strong><br>
+                    <?= !empty($user['phone']) ? htmlspecialchars($user['phone']) : '-' ?>
+                </p>
 
                 <!-- Tampilkan alamat -->
                 <p><strong>Address:</strong><br>
@@ -886,5 +920,6 @@ courierSelect.addEventListener("change", calculateShipping);
 serviceSelect.addEventListener("change", calculateShipping);
 </script>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

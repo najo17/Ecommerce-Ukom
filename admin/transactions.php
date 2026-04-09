@@ -313,6 +313,7 @@ if($status == 'approved'){
     data-courier="<?= htmlspecialchars($row['courier']) ?>"
     data-service="<?= htmlspecialchars($row['shipping_service']) ?>"
     data-shipping="<?= htmlspecialchars($row['shipping_cost']) ?>"
+    data-phone="<?= htmlspecialchars($row['shipping_phone'] ?? '') ?>"
     title="View Receipt">
     <i class="bi bi-receipt"></i>
 </div>
@@ -381,6 +382,11 @@ if($status == 'approved'){
 <div class="d-flex justify-content-between mb-2">
     <span>Date</span>
     <span id="r-date"></span>
+</div>
+
+<div class="mb-3 mt-2">
+    <span class="fw-semibold">Phone</span>
+    <div id="r-phone" class="small text-muted mt-1"></div>
 </div>
 
 <div class="mb-3 mt-2">
@@ -478,6 +484,9 @@ receiptModal.addEventListener('show.bs.modal', function (event) {
     document.getElementById('r-date').innerText =
         new Date(button.getAttribute('data-date'))
         .toLocaleDateString('id-ID');
+
+    document.getElementById('r-phone').innerText =
+        button.getAttribute('data-phone') || '-';
 
     document.getElementById('r-address').innerText =
         button.getAttribute('data-address') || '-';

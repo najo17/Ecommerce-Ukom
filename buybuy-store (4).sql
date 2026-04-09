@@ -109,6 +109,7 @@ CREATE TABLE `transactions` (
   `total` int(11) NOT NULL,
   `payment_method` varchar(20) NOT NULL,
   `shipping_address` text DEFAULT NULL,
+  `shipping_phone` varchar(20) DEFAULT NULL,
   `status` varchar(20) DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `payment_proof` varchar(255) DEFAULT NULL
@@ -133,6 +134,7 @@ CREATE TABLE `users` (
   `username` varchar(50) DEFAULT NULL,
   `full_name` varchar(100) DEFAULT NULL,
   `address` text DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `plain_password` varchar(255) DEFAULT NULL,

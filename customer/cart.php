@@ -551,5 +551,6 @@ $cart_count = array_sum($cart);
 
 </div>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

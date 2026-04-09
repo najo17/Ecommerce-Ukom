@@ -315,5 +315,6 @@ body{
     </div>
 </div>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>

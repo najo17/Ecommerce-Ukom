@@ -41,7 +41,7 @@ if(isset($_POST['submit_cancel'])){
     $reason = mysqli_real_escape_string($conn, trim($_POST['reason']));
 
     if(empty($reason)){
-        $error = "Reason cannot be empty.";
+        $_SESSION['notif'] = ['type' => 'error', 'message' => 'Reason cannot be empty.'];
     } else {
 
         // Cek apakah request cancel sudah pernah dibuat
@@ -51,7 +51,7 @@ if(isset($_POST['submit_cancel'])){
         ");
 
         if(mysqli_num_rows($check) > 0){
-            $error = "Cancellation request has already been submitted.";
+            $_SESSION['notif'] = ['type' => 'error', 'message' => 'Cancellation request has already been submitted.'];
         } else {
             // Simpan request cancel
             mysqli_query($conn, "
@@ -139,9 +139,7 @@ if(isset($_POST['submit_cancel'])){
             <strong>Status:</strong> <?= ucfirst($data['status']) ?>
         </div>
 
-        <?php if(isset($error)): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
-        <?php endif; ?>
+
 
         <form method="POST">
             <div class="mb-3">
@@ -159,5 +157,6 @@ if(isset($_POST['submit_cancel'])){
     </div>
 </div>
 
+<?php include 'notif.php'; ?>
 </body>
 </html>
